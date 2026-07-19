@@ -66,20 +66,61 @@ function getSaleUnitPrice(nicotineType, strength) {
   return Number(byType[strength] || 0);
 }
 
+function getInventoryMeterConfig(itemId, quantity) {
+  const limits = {
+    nicotine: 100,
+    salt: 100,
+    base: 2000,
+    bottles: 50,
+  };
+  const safeQuantity = Math.max(0, Number(quantity) || 0);
+  const limit = limits[itemId] || Math.max(safeQuantity, 1);
+  const ratio = limit > 0 ? Math.min(safeQuantity / limit, 1) : 0;
+
+  if (ratio <= 0.3) {
+    return {
+      fillPercent: Math.max(8, Math.round(ratio * 100)),
+      barColor: 'linear-gradient(90deg, #d63c3c 0%, #ef7a7a 100%)',
+    };
+  }
+
+  if (ratio <= 0.65) {
+    return {
+      fillPercent: Math.max(8, Math.round(ratio * 100)),
+      barColor: 'linear-gradient(90deg, #d79118 0%, #f0bd57 100%)',
+    };
+  }
+
+  return {
+    fillPercent: Math.max(8, Math.round(ratio * 100)),
+    barColor: 'linear-gradient(90deg, #18a979 0%, #57c89f 100%)',
+  };
+}
+
 function populateSaleFlavorOptions() {
   const data = getData();
   const saleFlavor = document.getElementById('saleFlavor');
   const currentValue = saleFlavor.value;
+  const availableFlavors = data.flavors.filter((flavor) => Number(flavor.quantity) >= 10);
 
   saleFlavor.innerHTML = '';
-  data.flavors.forEach((flavor) => {
+  availableFlavors.forEach((flavor) => {
     const option = document.createElement('option');
     option.value = String(flavor.id);
     option.textContent = `${flavor.name} (${Number(flavor.quantity)} ${flavor.unit})`;
     saleFlavor.appendChild(option);
   });
 
-  if (currentValue && data.flavors.some((flavor) => String(flavor.id) === currentValue)) {
+  if (availableFlavors.length === 0) {
+    const option = document.createElement('option');
+    option.value = '';
+    option.textContent = 'Brak dostępnych smaków';
+    saleFlavor.appendChild(option);
+    saleFlavor.value = '';
+    return;
+  }
+
+  if (currentValue && availableFlavors.some((flavor) => String(flavor.id) === currentValue)) {
     saleFlavor.value = currentValue;
   }
 }
@@ -128,7 +169,7 @@ function bindSaleForm() {
     const flavor = data.flavors.find((item) => item.id === flavorId);
     const nicotineUsage = STRENGTH_USAGE[strength];
 
-    if (!flavor || !nicotineUsage) {
+    if (!flavor || !nicotineUsage || Number(flavor.quantity) < 10) {
       message.textContent = 'Błąd: niepoprawne dane sprzedaży.';
       return;
     }
@@ -234,19 +275,17 @@ function renderDashboard() {
   const data = getData();
   const cardsRoot = document.getElementById('cards');
   const flavorsBody = document.getElementById('flavorsBody');
-  const inventoryMax = data.inventory.reduce((maxValue, item) => Math.max(maxValue, Number(item.quantity) || 0), 0);
 
   cardsRoot.innerHTML = '';
   data.inventory.forEach((item) => {
     const quantity = Number(item.quantity) || 0;
-    const fillPercent = inventoryMax > 0 ? Math.max(8, Math.round((quantity / inventoryMax) * 100)) : 8;
+    const meter = getInventoryMeterConfig(item.id, quantity);
     const card = document.createElement('article');
     card.className = 'card';
     card.innerHTML = `
       <p class="card-title">${item.name}</p>
       <p class="card-value">${quantity} ${item.unit}</p>
-      <p class="card-subtitle">Aktualnie dostępne w magazynie</p>
-      <div class="card-meter" aria-hidden="true"><span style="width: ${fillPercent}%"></span></div>
+      <div class="card-meter" aria-hidden="true"><span style="width: ${meter.fillPercent}%; background: ${meter.barColor};"></span></div>
     `;
     cardsRoot.appendChild(card);
   });
