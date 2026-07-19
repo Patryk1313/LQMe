@@ -22,7 +22,10 @@
                     <div class="page-hero-copy">
                         <p class="page-eyebrow">Magazyn</p>
                         <h2>Zarządzanie zasobami</h2>
-                        <p class="muted">Edytuj stany podstawowych materiałów, dodawaj smaki i aktualizuj ich dane bez opuszczania strony.</p>
+                        <p class="muted">
+                            Edytuj stany podstawowych materiałów, dodawaj smaki
+                            i aktualizuj ich dane.
+                        </p>
                     </div>
                 </section>
 
@@ -33,10 +36,6 @@
                             <h2>Magazyn</h2>
                         </div>
                     </div>
-                    <p class="muted">
-                        Tutaj możesz edytować ilość: sól, nikotyna, baza,
-                        butelki.
-                    </p>
 
                     <div class="table-wrap">
                         <table>
@@ -105,17 +104,34 @@
                         </div>
                         <div class="client-buy-field">
                             <label for="newFlavorDescription">Opis</label>
-                            <input type="text" id="newFlavorDescription" required />
+                            <input
+                                type="text"
+                                id="newFlavorDescription"
+                                required
+                            />
                         </div>
                         <div class="client-buy-field">
                             <label for="newFlavorQuantity">Ilość</label>
-                            <input type="number" id="newFlavorQuantity" min="0" step="10" required />
+                            <input
+                                type="number"
+                                id="newFlavorQuantity"
+                                min="0"
+                                step="10"
+                                required
+                            />
                         </div>
                         <div class="client-buy-field">
                             <label for="newFlavorUnit">Jednostka</label>
-                            <input type="text" id="newFlavorUnit" value="ml" required />
+                            <input
+                                type="text"
+                                id="newFlavorUnit"
+                                value="ml"
+                                required
+                            />
                         </div>
-                        <div class="actions-row sale-actions magazyn-form-actions">
+                        <div
+                            class="actions-row sale-actions magazyn-form-actions"
+                        >
                             <button type="submit">Dodaj smak</button>
                         </div>
                     </form>
