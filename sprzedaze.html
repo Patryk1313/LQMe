@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Panel Administratora - Sprzedaże</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="page">
+            <header class="topbar">
+                <nav class="menu">
+                    <a href="index.html">Dashboard</a>
+                    <a href="magazyn.html">Magazyn</a>
+                    <a class="active" href="sprzedaze.html">Sprzedaże</a>
+                    <a href="klienci.html">Klienci</a>
+                </nav>
+            </header>
+
+            <main class="content">
+                <section class="page-hero panel">
+                    <div class="page-hero-copy">
+                        <p class="page-eyebrow">Sprzedaże</p>
+                        <h2>Sprzedaże i statystyki</h2>
+                        <p class="muted">Monitoruj łączną wartość zamówień i szczegóły każdej zrealizowanej sprzedaży.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="stats-grid" id="salesStats"></div>
+                </section>
+
+                <section class="panel">
+                    <div class="section-head section-head-tight">
+                        <div>
+                            <p class="table-eyebrow">Historia</p>
+                            <h2>Wszystkie sprzedaże</h2>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Smak</th>
+                                    <th>Rodzaj</th>
+                                    <th>Moc</th>
+                                    <th>Cena / szt.</th>
+                                    <th>Wartość</th>
+                                    <th>Sztuki</th>
+                                    <th>Aromat</th>
+                                    <th>Nikotyna / sol</th>
+                                    <th>Baza</th>
+                                    <th>Butelki</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <script src="data.js"></script>
+        <script src="sprzedaze.js"></script>
+    </body>
+</html>

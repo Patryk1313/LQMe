@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Panel Administratora - Dashboard</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="page">
+            <header class="topbar">
+                <nav class="menu">
+                    <a class="active" href="index.html">Dashboard</a>
+                    <a href="magazyn.html">Magazyn</a>
+                    <a href="sprzedaze.html">Sprzedaże</a>
+                    <a href="klienci.html">Klienci</a>
+                </nav>
+            </header>
+
+            <main class="content">
+                <section class="page-hero panel">
+                    <div class="page-hero-copy">
+                        <p class="page-eyebrow">Dashboard</p>
+                        <h2>Stan magazynowy</h2>
+                        <p class="muted">Szybki podgląd najważniejszych zasobów i listy dostępnych smaków LQ.</p>
+                    </div>
+                    <div class="page-hero-actions">
+                        <button type="button" id="openSaleModalBtn">
+                            Dodaj sprzedaż
+                        </button>
+                    </div>
+                </section>
+
+                <section>
+                    <div id="cards" class="cards"></div>
+                </section>
+
+                <section class="panel">
+                    <div class="section-head section-head-tight">
+                        <div>
+                            <p class="table-eyebrow">Smaki</p>
+                            <h2>Lista dostępnych smaków LQ</h2>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Smak</th>
+                                    <th>Opis</th>
+                                    <th>Ilość</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="flavorsBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <div id="saleModal" class="modal hidden" aria-hidden="true">
+            <div class="modal-backdrop" data-close-sale-modal="true"></div>
+            <div
+                class="modal-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="saleModalTitle"
+            >
+                <div class="modal-header">
+                    <h3 id="saleModalTitle">Dodaj sprzedaż</h3>
+                    <button
+                        type="button"
+                        class="modal-close"
+                        id="closeSaleModalBtn"
+                        aria-label="Zamknij"
+                    >
+                        X
+                    </button>
+                </div>
+
+                <p class="muted">
+                    Sprzedaż odlicza smak, bazę, butelki oraz wybraną sól albo
+                    nikotynę według mocy.
+                </p>
+
+                <form id="saleForm" class="sale-form">
+                    <div class="field-group">
+                        <label for="saleFlavor">Smak LQ</label>
+                        <select id="saleFlavor" required></select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="saleNicotineType">Rodzaj</label>
+                        <select id="saleNicotineType" required>
+                            <option value="salt">Sól nikotynowa</option>
+                            <option value="nicotine">Nikotyna</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="saleStrength">Moc</label>
+                        <select id="saleStrength" required>
+                            <option value="6">6 mg</option>
+                            <option value="12">12 mg</option>
+                            <option value="18">18 mg</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="saleQuantity">Ilość sztuk</label>
+                        <input
+                            type="number"
+                            id="saleQuantity"
+                            min="1"
+                            step="1"
+                            value="1"
+                            required
+                        />
+                    </div>
+
+                    <div class="actions-row sale-actions">
+                        <button type="submit">Dodaj sprzedaż</button>
+                        <span id="saleMessage" class="message"></span>
+                    </div>
+                </form>
+
+                <div class="sale-info">
+                    <p>1 szt. LQ 60 ml zużywa 10 ml aromatu oraz:</p>
+                    <p>6 mg = 2 ml soli albo nikotyny</p>
+                    <p>12 mg = 3.5 ml soli albo nikotyny</p>
+                    <p>18 mg = 5.5 ml soli albo nikotyny</p>
+                    <p class="sale-info-head">Cennik:</p>
+                    <p>
+                        Nikotyna: 6 mg = 35 zł, 12 mg = 35 zł, 18 mg = 40 zł, 20
+                        mg = 45 zł
+                    </p>
+                    <p>
+                        Sól nikotynowa: 6 mg = 40 zł, 12 mg = 40 zł, 18 mg = 45
+                        zł, 20 mg = 50 zł
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <script src="data.js"></script>
+        <script src="app.js"></script>
+    </body>
+</html>

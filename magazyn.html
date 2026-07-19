@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Panel Administratora - Magazyn</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="page">
+            <header class="topbar">
+                <nav class="menu">
+                    <a href="index.html">Dashboard</a>
+                    <a class="active" href="magazyn.html">Magazyn</a>
+                    <a href="sprzedaze.html">Sprzedaże</a>
+                    <a href="klienci.html">Klienci</a>
+                </nav>
+            </header>
+
+            <main class="content">
+                <section class="page-hero panel">
+                    <div class="page-hero-copy">
+                        <p class="page-eyebrow">Magazyn</p>
+                        <h2>Zarządzanie zasobami</h2>
+                        <p class="muted">Edytuj stany podstawowych materiałów, dodawaj smaki i aktualizuj ich dane bez opuszczania strony.</p>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="section-head section-head-tight">
+                        <div>
+                            <p class="table-eyebrow">Materiały</p>
+                            <h2>Magazyn</h2>
+                        </div>
+                    </div>
+                    <p class="muted">
+                        Tutaj możesz edytować ilość: sól, nikotyna, baza,
+                        butelki.
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Materiał</th>
+                                    <th>Aktualna ilość</th>
+                                    <th>Nowa ilość</th>
+                                    <th>Jednostka</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="actions-row magazyn-toolbar">
+                        <button id="saveInventoryBtn" type="button">
+                            Zapisz zmiany
+                        </button>
+                        <span id="inventoryMessage" class="message"></span>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="section-head section-head-tight">
+                        <div>
+                            <p class="table-eyebrow">Smaki</p>
+                            <h2>Smaki LQ</h2>
+                        </div>
+                    </div>
+                    <p class="muted">
+                        Tutaj możesz edytować ilość oraz dane dostępnych smaków.
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Smak</th>
+                                    <th>Opis</th>
+                                    <th>Ilość</th>
+                                    <th>Jednostka</th>
+                                    <th>Akcja</th>
+                                </tr>
+                            </thead>
+                            <tbody id="flavorInventoryBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="section-head section-head-tight">
+                        <div>
+                            <p class="table-eyebrow">Nowy smak</p>
+                            <h2>Dodaj smak</h2>
+                        </div>
+                    </div>
+                    <p class="muted">
+                        Uzupełnij dane nowego smaku i dodaj go do listy.
+                    </p>
+
+                    <form id="newFlavorForm" class="sale-form new-flavor-form">
+                        <div class="client-buy-field">
+                            <label for="newFlavorName">Nazwa</label>
+                            <input type="text" id="newFlavorName" required />
+                        </div>
+                        <div class="client-buy-field">
+                            <label for="newFlavorDescription">Opis</label>
+                            <input type="text" id="newFlavorDescription" required />
+                        </div>
+                        <div class="client-buy-field">
+                            <label for="newFlavorQuantity">Ilość</label>
+                            <input type="number" id="newFlavorQuantity" min="0" step="10" required />
+                        </div>
+                        <div class="client-buy-field">
+                            <label for="newFlavorUnit">Jednostka</label>
+                            <input type="text" id="newFlavorUnit" value="ml" required />
+                        </div>
+                        <div class="actions-row sale-actions magazyn-form-actions">
+                            <button type="submit">Dodaj smak</button>
+                        </div>
+                    </form>
+
+                    <div class="actions-row magazyn-feedback-row">
+                        <span id="flavorMessage" class="message"></span>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <div
+            id="magazynPopup"
+            class="client-popup admin-popup hidden"
+            role="status"
+            aria-live="polite"
+        >
+            <div class="admin-popup-body">
+                <span id="magazynPopupText"></span>
+                <button
+                    type="button"
+                    id="closeMagazynPopupBtn"
+                    class="admin-popup-close"
+                    aria-label="Zamknij komunikat"
+                >
+                    ×
+                </button>
+            </div>
+        </div>
+
+        <script src="data.js"></script>
+        <script src="magazyn.js"></script>
+    </body>
+</html>
