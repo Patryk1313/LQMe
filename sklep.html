@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+        <title>Sklep</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body class="client-view">
+        <div class="client-page">
+            <header class="client-header">
+                <div class="client-header-content">
+                    <div class="client-brand">
+                        <p class="client-kicker">Sklep LQMe</p>
+                        <h1>Wybierz Swój Liquid</h1>
+                        <p class="muted">
+                            Sprawdź dostępne smaki i od razu zobacz, co da się przygotować.
+                        </p>
+                    </div>
+                </div>
+            </header>
+
+            <main class="client-content">
+                <section class="panel client-products-panel">
+                    <div class="section-head">
+                        <div>
+                            <p class="table-eyebrow">Oferta</p>
+                            <h2>Dostępne smaki</h2>
+                        </div>
+                    </div>
+                    <div id="clientFlavorList" class="flavor-grid"></div>
+                </section>
+
+                <section class="panel">
+                    <h2>Zamówienie</h2>
+                    <p class="muted">
+                        Zamówienie pokazuje, czy zestaw dla wybranych smaków i mocy
+                        może zostać przygotowane.
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Smak</th>
+                                    <th>Rodzaj</th>
+                                    <th>Moc</th>
+                                    <th>Ilość</th>
+                                    <th>Akcja</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cartTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="cartSummary" class="cart-summary"></div>
+
+                    <div class="actions-row order-actions">
+                        <button type="button" id="copyOrderBtn">Kopiuj do schowka</button>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <div
+            id="clientPopup"
+            class="client-popup hidden"
+            role="status"
+            aria-live="polite"
+        ></div>
+
+        <div id="clientOrderModal" class="modal hidden" aria-hidden="true">
+            <div class="modal-backdrop" data-close-client-order="true"></div>
+            <div
+                class="modal-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="clientOrderTitle"
+            >
+                <div class="modal-header">
+                    <h3 id="clientOrderTitle">Dodaj do zamówienia</h3>
+                    <button
+                        type="button"
+                        class="modal-close"
+                        id="closeClientOrderBtn"
+                        aria-label="Zamknij"
+                    >
+                        X
+                    </button>
+                </div>
+
+                <p id="clientOrderFlavorName" class="muted"></p>
+
+                <form id="clientOrderForm" class="sale-form">
+                    <div class="client-buy-field">
+                        <label for="clientOrderType">Rodzaj</label>
+                        <select id="clientOrderType" required>
+                            <option value="salt">Sól nikotynowa</option>
+                            <option value="nicotine">Nikotyna</option>
+                        </select>
+                    </div>
+
+                    <div class="client-buy-field">
+                        <label for="clientOrderStrength">Moc</label>
+                        <select id="clientOrderStrength" required>
+                            <option value="6">6 mg</option>
+                            <option value="12">12 mg</option>
+                            <option value="18">18 mg</option>
+                        </select>
+                    </div>
+
+                    <div class="client-buy-field">
+                        <label for="clientOrderQuantity">Ilość</label>
+                        <input
+                            type="number"
+                            id="clientOrderQuantity"
+                            min="1"
+                            step="1"
+                            value="1"
+                            required
+                        />
+                    </div>
+
+                    <div class="actions-row sale-actions">
+                        <button type="submit">Dodaj do zamówienia</button>
+                        <span id="clientOrderMessage" class="message"></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="clientCopyModal" class="modal hidden" aria-hidden="true">
+            <div class="modal-backdrop" data-close-client-copy="true"></div>
+            <div
+                class="modal-dialog copy-modal-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="clientCopyTitle"
+            >
+                <div class="modal-header">
+                    <h3 id="clientCopyTitle">Wiadomość skopiowana</h3>
+                    <button
+                        type="button"
+                        class="modal-close"
+                        id="closeClientCopyBtn"
+                        aria-label="Zamknij"
+                    >
+                        X
+                    </button>
+                </div>
+
+                <p class="copy-modal-message">
+                    Gotowe. Wiadomość z zamówieniem została skopiowana do schowka,
+                    możesz ją teraz wysłać w celu złożenia zamówienia.
+                </p>
+
+                <div class="actions-row copy-modal-actions">
+                    <button type="button" id="clientCopyOkBtn">Zamknij</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="data.js"></script>
+        <script src="klienci.js"></script>
+    </body>
+</html>
