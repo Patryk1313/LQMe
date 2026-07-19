@@ -71,7 +71,7 @@ function getInventoryMeterConfig(itemId, quantity) {
     nicotine: 100,
     salt: 100,
     base: 2000,
-    bottles: 50,
+    bottles: 100,
   };
   const safeQuantity = Math.max(0, Number(quantity) || 0);
   const limit = limits[itemId] || Math.max(safeQuantity, 1);

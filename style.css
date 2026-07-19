@@ -705,11 +705,34 @@ button:hover {
 @media (max-width: 900px) {
     .page {
         grid-template-columns: 1fr;
+        padding: 16px 12px 32px;
     }
 
     .topbar {
         min-height: auto;
         position: static;
+        gap: 14px;
+    }
+
+    .menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .menu a {
+        text-align: center;
+    }
+
+    .page-hero {
+        padding: 22px 20px;
+    }
+
+    .page-hero-copy h2 {
+        font-size: 1.55rem;
+    }
+
+    .page-hero-actions,
+    .hero-action-button {
+        width: 100%;
     }
 
     .cards {
@@ -736,7 +759,11 @@ button:hover {
 
     .topbar {
         padding: 18px;
-        border-radius: 22px;
+        border-radius: 18px;
+    }
+
+    .menu {
+        grid-template-columns: 1fr;
     }
 
     .page-hero {
@@ -745,9 +772,37 @@ button:hover {
         padding: 22px 18px;
     }
 
+    .page-hero-copy,
+    .page-hero-copy h2,
+    .page-hero-copy p {
+        width: 100%;
+    }
+
+    .page-hero-copy h2 {
+        font-size: 1.35rem;
+    }
+
+    .hero-action-button {
+        min-width: 0;
+        min-height: 48px;
+    }
+
     .section-head {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .panel {
+        padding: 16px;
+    }
+
+    table {
+        font-size: 0.87rem;
+    }
+
+    th,
+    td {
+        padding: 10px 8px;
     }
 
     .cards {
@@ -784,5 +839,32 @@ button:hover {
 
     .sale-form {
         grid-template-columns: 1fr;
+    }
+
+    .sale-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .sale-actions button,
+    .sale-actions .message {
+        width: 100%;
+    }
+
+    .modal-dialog {
+        width: min(100vw - 20px, 760px);
+        padding: 18px;
+    }
+
+    .modal-header {
+        align-items: flex-start;
+    }
+
+    .client-popup {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        max-width: none;
     }
 }
