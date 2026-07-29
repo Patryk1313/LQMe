@@ -175,23 +175,43 @@ function bindSaleForm() {
         const saleQuantity = Number(
             document.getElementById("saleQuantity").value,
         );
+        const aromaMlPerBottle = Number(
+            document.getElementById("saleAromaMl").value,
+        );
 
         if (!Number.isInteger(saleQuantity) || saleQuantity <= 0) {
             message.textContent = "Błąd: ilość sztuk musi być większa od zera.";
             return;
         }
 
+        if (!Number.isFinite(aromaMlPerBottle) || aromaMlPerBottle <= 0) {
+            message.textContent =
+                "Błąd: ilość aromatu na 1 sztukę musi być większa od zera.";
+            return;
+        }
+
         const flavor = data.flavors.find((item) => item.id === flavorId);
         const nicotineUsage = STRENGTH_USAGE[strength];
+        const baseUsagePerBottle = 60 - aromaMlPerBottle - nicotineUsage;
 
-        if (!flavor || !nicotineUsage || Number(flavor.quantity) < 10) {
+        if (
+            !flavor ||
+            !nicotineUsage ||
+            Number(flavor.quantity) < aromaMlPerBottle
+        ) {
             message.textContent = "Błąd: niepoprawne dane sprzedaży.";
             return;
         }
 
-        const flavorRequired = 10 * saleQuantity;
+        if (baseUsagePerBottle < 0) {
+            message.textContent =
+                "Błąd: receptura przekracza 60 ml dla tej konfiguracji.";
+            return;
+        }
+
+        const flavorRequired = aromaMlPerBottle * saleQuantity;
         const nicotineRequired = nicotineUsage * saleQuantity;
-        const baseRequired = (60 - 10 - nicotineUsage) * saleQuantity;
+        const baseRequired = baseUsagePerBottle * saleQuantity;
         const bottlesRequired = saleQuantity;
         const unitPrice = getSaleUnitPrice(nicotineType, strength);
         const totalPrice = Number((unitPrice * saleQuantity).toFixed(2));
@@ -274,6 +294,7 @@ function bindSaleForm() {
             nicotineType,
             strength,
             saleQuantity,
+            aromaMlPerBottle: Number(aromaMlPerBottle.toFixed(2)),
             unitPrice,
             totalPrice,
             flavorUsed: Number(flavorRequired.toFixed(2)),
