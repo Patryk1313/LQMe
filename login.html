@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Logowanie do panelu</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="auth-page">
+            <div class="auth-card panel">
+                <p class="page-eyebrow">Panel LQME</p>
+                <h1 id="authTitle">Logowanie</h1>
+                <p id="authSubtitle" class="muted">
+                    Zaloguj się, aby wejść do panelu. Sklep jest dostępny dla
+                    wszystkich.
+                </p>
+
+                <form id="loginForm" class="auth-form">
+                    <div class="client-buy-field">
+                        <label for="loginEmail">Adres e-mail</label>
+                        <input
+                            id="loginEmail"
+                            name="loginEmail"
+                            type="email"
+                            autocomplete="email"
+                            required
+                        />
+                    </div>
+                    <div class="client-buy-field">
+                        <label for="loginPassword">Hasło</label>
+                        <input
+                            id="loginPassword"
+                            name="loginPassword"
+                            type="password"
+                            autocomplete="current-password"
+                            required
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        id="authSubmitBtn"
+                        class="hero-action-button"
+                    >
+                        Zaloguj się
+                    </button>
+                    <button
+                        type="button"
+                        id="authModeToggle"
+                        class="secondary-action-button"
+                    >
+                        Utwórz konto
+                    </button>
+                    <p id="loginMessage" class="auth-message"></p>
+                </form>
+            </div>
+        </div>
+
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+        <script>
+            window.LQME_FIREBASE_CONFIG = {
+                apiKey: "AIzaSyD-noco-0LpF7FsI5jguvIAZvMFTDbEMBU",
+                authDomain: "lqme-cd75b.firebaseapp.com",
+                projectId: "lqme-cd75b",
+                storageBucket: "lqme-cd75b.firebasestorage.app",
+                messagingSenderId: "55923018511",
+                appId: "1:55923018511:web:1296d5f5d9bc05c213cc7a",
+            };
+        </script>
+        <script src="firebase-sync.js"></script>
+        <script src="auth.js"></script>
+    </body>
+</html>

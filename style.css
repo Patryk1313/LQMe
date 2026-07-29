@@ -27,12 +27,107 @@ body {
     font-family: "Poppins", "Segoe UI", Arial, sans-serif;
     color: var(--text);
     background:
-        radial-gradient(circle at top left, rgba(107, 78, 255, 0.1), transparent 26%),
+        radial-gradient(
+            circle at top left,
+            rgba(107, 78, 255, 0.1),
+            transparent 26%
+        ),
         linear-gradient(180deg, #fafbff 0%, var(--bg) 100%);
 }
 
 body.client-view {
     background: #f3f4f8;
+}
+
+.auth-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+.auth-card {
+    width: min(460px, 100%);
+    padding: 32px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+}
+
+.auth-form {
+    display: grid;
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.auth-message {
+    min-height: 1.2em;
+    margin: 0;
+    font-weight: 600;
+}
+
+.auth-message.error {
+    color: #c0392b;
+}
+
+.auth-message.success {
+    color: #1f8f5f;
+}
+
+.secondary-action-button {
+    border: 1px solid rgba(107, 78, 255, 0.24);
+    background: #ffffff;
+    color: var(--accent);
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.price-form {
+    display: grid;
+    gap: 16px;
+}
+
+.price-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.price-card {
+    border: 1px solid rgba(26, 29, 39, 0.08);
+    background: #ffffff;
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: var(--shadow-card);
+}
+
+.price-card h3 {
+    margin: 0 0 12px;
+    font-size: 1rem;
+}
+
+.price-field {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.price-field label {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+.price-field input {
+    border: 1px solid rgba(26, 29, 39, 0.12);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font: inherit;
+}
+
+.price-actions {
+    justify-content: flex-start;
 }
 
 .page {
@@ -170,6 +265,7 @@ body.client-view {
     position: sticky;
     top: 16px;
     color: #ffffff;
+    align-self: start;
 }
 
 h1 {
@@ -197,6 +293,7 @@ h2 {
 .menu {
     display: grid;
     gap: 8px;
+    margin-bottom: 0;
 }
 
 .menu a {
@@ -225,6 +322,56 @@ h2 {
     color: #ffffff;
 }
 
+.firebase-status {
+    margin-top: auto;
+    margin-bottom: 0;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 0.86rem;
+    font-weight: 600;
+    line-height: 1.4;
+    align-self: stretch;
+    justify-self: stretch;
+}
+
+.firebase-status-client {
+    margin-top: 16px;
+    max-width: 320px;
+    background: rgba(107, 78, 255, 0.1);
+    border-color: rgba(107, 78, 255, 0.2);
+    color: #44337a;
+}
+
+.firebase-status.connected {
+    border-color: rgba(87, 200, 159, 0.35);
+    background: rgba(87, 200, 159, 0.16);
+    color: #dff7eb;
+}
+
+.logout-button {
+    border: 0;
+    border-radius: 999px;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 160ms ease;
+}
+
+.logout-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.firebase-status.error {
+    border-color: rgba(239, 122, 122, 0.35);
+    background: rgba(239, 122, 122, 0.16);
+    color: #ffe8e8;
+}
+
 .content {
     display: grid;
     gap: 18px;
@@ -238,7 +385,11 @@ h2 {
     gap: 18px;
     padding: 28px;
     background:
-        linear-gradient(135deg, rgba(107, 78, 255, 0.1), rgba(107, 78, 255, 0) 44%),
+        linear-gradient(
+            135deg,
+            rgba(107, 78, 255, 0.1),
+            rgba(107, 78, 255, 0) 44%
+        ),
         #ffffff;
 }
 
@@ -353,7 +504,11 @@ h2 {
     display: block;
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-soft) 100%);
+    background: linear-gradient(
+        90deg,
+        var(--accent) 0%,
+        var(--accent-soft) 100%
+    );
 }
 
 .client-flavor-description {

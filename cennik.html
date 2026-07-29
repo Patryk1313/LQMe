@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="favicon-16x16.png"
+        />
+        <title>Cennik</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="page">
+            <header class="topbar">
+                <nav class="menu">
+                    <a href="index.html">Stan magazynowy</a>
+                    <a href="magazyn.html">Magazyn</a>
+                    <a href="sprzedaze.html">Sprzedaże</a>
+                    <a class="active" href="cennik.html">Cennik</a>
+                    <a href="sklep.html">Sklep</a>
+                    <a href="login.html" data-panel-auth-link="true"
+                        >Logowanie</a
+                    >
+                </nav>
+                <div
+                    id="firebaseStatus"
+                    class="firebase-status"
+                    aria-live="polite"
+                >
+                    Sprawdzam połączenie z bazą...
+                </div>
+            </header>
+
+            <main class="content">
+                <section class="page-hero panel">
+                    <div class="page-hero-copy">
+                        <p class="page-eyebrow">Cennik</p>
+                        <h2>Zarządzanie cennikiem</h2>
+                        <p class="muted">
+                            Zmień ceny za jedną sztukę dla nikotyny i soli
+                            nikotynowej.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="section-head section-head-tight">
+                        <div>
+                            <p class="table-eyebrow">Edytor</p>
+                            <h2>Ceny sprzedaży</h2>
+                        </div>
+                    </div>
+
+                    <form id="priceForm" class="price-form">
+                        <div class="price-grid">
+                            <div class="price-card">
+                                <h3>Nikotyna</h3>
+                                <div class="price-field">
+                                    <label for="nicotine6">6 mg</label>
+                                    <input
+                                        id="nicotine6"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                    />
+                                </div>
+                                <div class="price-field">
+                                    <label for="nicotine12">12 mg</label>
+                                    <input
+                                        id="nicotine12"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                    />
+                                </div>
+                                <div class="price-field">
+                                    <label for="nicotine18">18 mg</label>
+                                    <input
+                                        id="nicotine18"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                    />
+                                </div>
+                                <div class="price-field">
+                                    <label for="nicotine20">20 mg</label>
+                                    <input
+                                        id="nicotine20"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="price-card">
+                                <h3>Sól nikotynowa</h3>
+                                <div class="price-field">
+                                    <label for="salt6">6 mg</label>
+                                    <input
+                                        id="salt6"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                    />
+                                </div>
+                                <div class="price-field">
+                                    <label for="salt12">12 mg</label>
+                                    <input
+                                        id="salt12"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                    />
+                                </div>
+                                <div class="price-field">
+                                    <label for="salt18">18 mg</label>
+                                    <input
+                                        id="salt18"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                    />
+                                </div>
+                                <div class="price-field">
+                                    <label for="salt20">20 mg</label>
+                                    <input
+                                        id="salt20"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="actions-row price-actions">
+                            <button type="submit">Zapisz cennik</button>
+                            <span id="priceMessage" class="message"></span>
+                        </div>
+                    </form>
+                </section>
+            </main>
+        </div>
+
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+        <script>
+            window.LQME_FIREBASE_CONFIG = {
+                apiKey: "AIzaSyD-noco-0LpF7FsI5jguvIAZvMFTDbEMBU",
+                authDomain: "lqme-cd75b.firebaseapp.com",
+                projectId: "lqme-cd75b",
+                storageBucket: "lqme-cd75b.firebasestorage.app",
+                messagingSenderId: "55923018511",
+                appId: "1:55923018511:web:1296d5f5d9bc05c213cc7a",
+            };
+        </script>
+        <script src="firebase-sync.js"></script>
+        <script src="data.js"></script>
+        <script src="auth.js"></script>
+        <script src="cennik.js"></script>
+    </body>
+</html>

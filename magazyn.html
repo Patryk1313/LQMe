@@ -3,7 +3,12 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="favicon-16x16.png"
+        />
         <title>Magazyn</title>
         <link rel="stylesheet" href="style.css" />
     </head>
@@ -14,8 +19,19 @@
                     <a href="index.html">Stan magazynowy</a>
                     <a class="active" href="magazyn.html">Magazyn</a>
                     <a href="sprzedaze.html">Sprzedaże</a>
+                    <a href="cennik.html">Cennik</a>
                     <a href="sklep.html">Sklep</a>
+                    <a href="login.html" data-panel-auth-link="true"
+                        >Logowanie</a
+                    >
                 </nav>
+                <div
+                    id="firebaseStatus"
+                    class="firebase-status"
+                    aria-live="polite"
+                >
+                    Sprawdzam połączenie z bazą...
+                </div>
             </header>
 
             <main class="content">
@@ -127,7 +143,7 @@
                                 type="text"
                                 id="newFlavorUnit"
                                 value="ml"
-                                required
+                                readonly
                             />
                         </div>
                         <div
@@ -163,7 +179,22 @@
             </div>
         </div>
 
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+        <script>
+            window.LQME_FIREBASE_CONFIG = {
+                apiKey: "AIzaSyD-noco-0LpF7FsI5jguvIAZvMFTDbEMBU",
+                authDomain: "lqme-cd75b.firebaseapp.com",
+                projectId: "lqme-cd75b",
+                storageBucket: "lqme-cd75b.firebasestorage.app",
+                messagingSenderId: "55923018511",
+                appId: "1:55923018511:web:1296d5f5d9bc05c213cc7a",
+            };
+        </script>
+        <script src="firebase-sync.js"></script>
         <script src="data.js"></script>
+        <script src="auth.js"></script>
         <script src="magazyn.js"></script>
     </body>
 </html>

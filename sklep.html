@@ -3,7 +3,12 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="favicon-16x16.png"
+        />
         <title>Sklep</title>
         <link rel="stylesheet" href="style.css" />
     </head>
@@ -15,9 +20,17 @@
                         <p class="client-kicker">Sklep LQMe</p>
                         <h1>Wybierz Swój Liquid</h1>
                         <p class="muted">
-                            Sprawdź dostępne smaki i od razu zobacz, co da się przygotować.
+                            Sprawdź dostępne smaki i od razu zobacz, co da się
+                            przygotować.
                         </p>
                     </div>
+                </div>
+                <div
+                    id="firebaseStatus"
+                    class="firebase-status firebase-status-client"
+                    aria-live="polite"
+                >
+                    Sprawdzam połączenie z bazą...
                 </div>
             </header>
 
@@ -35,8 +48,8 @@
                 <section class="panel">
                     <h2>Zamówienie</h2>
                     <p class="muted">
-                        Zamówienie pokazuje, czy zestaw dla wybranych smaków i mocy
-                        może zostać przygotowane.
+                        Zamówienie pokazuje, czy zestaw dla wybranych smaków i
+                        mocy może zostać przygotowane.
                     </p>
 
                     <div class="table-wrap">
@@ -57,7 +70,9 @@
                     <div id="cartSummary" class="cart-summary"></div>
 
                     <div class="actions-row order-actions">
-                        <button type="button" id="copyOrderBtn">Kopiuj do schowka</button>
+                        <button type="button" id="copyOrderBtn">
+                            Kopiuj do schowka
+                        </button>
                     </div>
                 </section>
             </main>
@@ -151,8 +166,8 @@
                 </div>
 
                 <p class="copy-modal-message">
-                    Gotowe. Wiadomość z zamówieniem została skopiowana do schowka,
-                    możesz ją teraz wysłać w celu złożenia zamówienia.
+                    Gotowe. Wiadomość z zamówieniem została skopiowana do
+                    schowka, możesz ją teraz wysłać w celu złożenia zamówienia.
                 </p>
 
                 <div class="actions-row copy-modal-actions">
@@ -161,6 +176,20 @@
             </div>
         </div>
 
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+        <script>
+            window.LQME_FIREBASE_CONFIG = {
+                apiKey: "AIzaSyD-noco-0LpF7FsI5jguvIAZvMFTDbEMBU",
+                authDomain: "lqme-cd75b.firebaseapp.com",
+                projectId: "lqme-cd75b",
+                storageBucket: "lqme-cd75b.firebasestorage.app",
+                messagingSenderId: "55923018511",
+                appId: "1:55923018511:web:1296d5f5d9bc05c213cc7a",
+            };
+        </script>
+        <script src="firebase-sync.js"></script>
         <script src="data.js"></script>
         <script src="klienci.js"></script>
     </body>
