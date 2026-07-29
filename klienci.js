@@ -686,7 +686,27 @@ function bindStorefrontInventorySync() {
     });
 
     window.addEventListener("focus", () => {
-        syncStorefrontState();
+        hydrateDataFromRemote()
+            .then(() => {
+                syncStorefrontState();
+            })
+            .catch(() => {
+                syncStorefrontState();
+            });
+    });
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState !== "visible") {
+            return;
+        }
+
+        hydrateDataFromRemote()
+            .then(() => {
+                syncStorefrontState();
+            })
+            .catch(() => {
+                syncStorefrontState();
+            });
     });
 
     window.addEventListener("lqme:data-updated", () => {

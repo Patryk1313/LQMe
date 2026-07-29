@@ -33,6 +33,10 @@
     let documentRef = null;
     let unsubscribe = null;
     let initPromise = null;
+    let authStateUnsubscribe = null;
+    let pendingWritePayload = null;
+    let isWriteInFlight = false;
+    let retryTimeoutId = null;
 
     function updateUiStatus() {
         const statusEl = document.getElementById("firebaseStatus");
@@ -118,6 +122,98 @@
         return documentData;
     }
 
+    function clearRetryTimer() {
+        if (!retryTimeoutId) {
+            return;
+        }
+
+        clearTimeout(retryTimeoutId);
+        retryTimeoutId = null;
+    }
+
+    function scheduleWriteRetry() {
+        if (retryTimeoutId) {
+            return;
+        }
+
+        retryTimeoutId = setTimeout(() => {
+            retryTimeoutId = null;
+            flushPendingWrite().catch(() => {});
+        }, 2500);
+    }
+
+    async function flushPendingWrite() {
+        if (isWriteInFlight || !pendingWritePayload) {
+            return pendingWritePayload;
+        }
+
+        isWriteInFlight = true;
+        const payloadToWrite = pendingWritePayload;
+
+        try {
+            const sync = await initializeFirebase();
+            if (!sync || !sync.writeData) {
+                scheduleWriteRetry();
+                return pendingWritePayload;
+            }
+
+            const currentUser = auth?.currentUser;
+            if (!currentUser || currentUser.isAnonymous) {
+                setSyncState({
+                    isConfigured: true,
+                    isReady: false,
+                    lastError:
+                        "Brak autoryzacji zapisu. Zaloguj się do panelu, aby zapisywać zmiany.",
+                });
+                scheduleWriteRetry();
+                return pendingWritePayload;
+            }
+
+            const result = await sync.writeData(payloadToWrite);
+
+            if (pendingWritePayload === payloadToWrite) {
+                pendingWritePayload = null;
+            }
+
+            clearRetryTimer();
+            setSyncState({
+                isConfigured: true,
+                isReady: true,
+                lastError: null,
+            });
+
+            if (pendingWritePayload) {
+                setTimeout(() => {
+                    flushPendingWrite().catch(() => {});
+                }, 0);
+            }
+
+            return result;
+        } catch (error) {
+            console.warn(
+                "LQME sync: zapis do Firestore nie powiódł się",
+                error,
+            );
+
+            const isAuthError =
+                error?.code === "permission-denied" ||
+                error?.code === "unauthenticated";
+
+            setSyncState({
+                isConfigured: true,
+                isReady: false,
+                lastError: isAuthError
+                    ? "Zapis odrzucony przez Firestore. Zaloguj się na konto panelu i spróbuj ponownie."
+                    : error?.message || "Błąd zapisu do Firestore.",
+            });
+
+            scheduleWriteRetry();
+            return pendingWritePayload;
+        } finally {
+            isWriteInFlight = false;
+        }
+    }
+
     async function initializeFirebase() {
         if (initPromise) {
             return initPromise;
@@ -150,6 +246,21 @@
 
                 auth = window.firebase.auth(firebaseApp);
                 window.lqmeFirebaseAuth = auth;
+                if (!authStateUnsubscribe) {
+                    authStateUnsubscribe = auth.onAuthStateChanged((user) => {
+                        if (user && !user.isAnonymous) {
+                            setSyncState({
+                                isConfigured: true,
+                                isReady: true,
+                                lastError: null,
+                            });
+
+                            if (pendingWritePayload) {
+                                flushPendingWrite().catch(() => {});
+                            }
+                        }
+                    });
+                }
                 firestore = window.firebase.firestore(firebaseApp);
                 documentRef = firestore
                     .collection(COLLECTION_NAME)
@@ -216,49 +327,8 @@
     }
 
     async function writeData(payload) {
-        const sync = await initializeFirebase();
-        if (!sync || !sync.writeData) {
-            return payload;
-        }
-
-        const currentUser = auth?.currentUser;
-        if (!currentUser || currentUser.isAnonymous) {
-            setSyncState({
-                isConfigured: true,
-                isReady: false,
-                lastError:
-                    "Brak autoryzacji zapisu. Zaloguj się do panelu, aby zapisywać zmiany.",
-            });
-            return payload;
-        }
-
-        try {
-            const result = await sync.writeData(payload);
-            setSyncState({
-                isConfigured: true,
-                isReady: true,
-                lastError: null,
-            });
-            return result;
-        } catch (error) {
-            console.warn(
-                "LQME sync: zapis do Firestore nie powiódł się",
-                error,
-            );
-
-            const isAuthError =
-                error?.code === "permission-denied" ||
-                error?.code === "unauthenticated";
-
-            setSyncState({
-                isConfigured: true,
-                isReady: false,
-                lastError: isAuthError
-                    ? "Zapis odrzucony przez Firestore. Zaloguj się na konto panelu i spróbuj ponownie."
-                    : error?.message || "Błąd zapisu do Firestore.",
-            });
-            return payload;
-        }
+        pendingWritePayload = payload;
+        return flushPendingWrite();
     }
 
     window.firebaseSync = {

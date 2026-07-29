@@ -214,3 +214,13 @@ window.addEventListener("lqme:data-updated", () => {
     renderSalesStats();
     renderSalesTable();
 });
+
+window.addEventListener("focus", () => {
+    hydrateDataFromRemote().catch(() => {});
+});
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        hydrateDataFromRemote().catch(() => {});
+    }
+});

@@ -76,7 +76,31 @@ function bindPriceForm() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+async function initializeCennikData() {
+    try {
+        await hydrateDataFromRemote();
+    } catch (error) {
+        console.warn("LQME cennik: nie udało się zainicjować danych", error);
+    }
+
     populatePriceForm();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
     bindPriceForm();
+    initializeCennikData();
+});
+
+window.addEventListener("lqme:data-updated", () => {
+    populatePriceForm();
+});
+
+window.addEventListener("focus", () => {
+    hydrateDataFromRemote().catch(() => {});
+});
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        hydrateDataFromRemote().catch(() => {});
+    }
 });
