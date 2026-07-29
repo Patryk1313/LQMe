@@ -4,6 +4,8 @@ const CLIENT_STRENGTH_USAGE = {
     18: 5.5,
 };
 
+const FLAVOR_USAGE_PER_BOTTLE_ML = 5;
+
 let clientCart = [];
 let popupTimeoutId = null;
 let activeOrderFlavorId = null;
@@ -114,12 +116,12 @@ function getFlavorRecipeCapacity(
     const availableNicotine = Number(
         remainingResources.inventory[nicotineType] || 0,
     );
-    const baseUsage = 60 - 10 - nicotineUsage;
+    const baseUsage = 60 - FLAVOR_USAGE_PER_BOTTLE_ML - nicotineUsage;
 
     return Math.max(
         0,
         Math.min(
-            floorRecipeCapacity(availableFlavor, 10),
+            floorRecipeCapacity(availableFlavor, FLAVOR_USAGE_PER_BOTTLE_ML),
             floorRecipeCapacity(availableBase, baseUsage),
             floorRecipeCapacity(availableBottles, 1),
             floorRecipeCapacity(availableNicotine, nicotineUsage),
@@ -454,8 +456,9 @@ function getCartRequirements(cartItems, data) {
 
     cartItems.forEach((item) => {
         const nicotineUsage = CLIENT_STRENGTH_USAGE[item.strength];
-        const flavorUsage = 10 * item.quantity;
-        const baseUsage = (60 - 10 - nicotineUsage) * item.quantity;
+        const flavorUsage = FLAVOR_USAGE_PER_BOTTLE_ML * item.quantity;
+        const baseUsage =
+            (60 - FLAVOR_USAGE_PER_BOTTLE_ML - nicotineUsage) * item.quantity;
 
         totals.flavorUsageById[item.flavorId] =
             (totals.flavorUsageById[item.flavorId] || 0) + flavorUsage;

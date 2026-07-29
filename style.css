@@ -556,11 +556,11 @@ h2 {
 }
 
 .stock-status-out {
-    color: #b42323;
+    color: #6f7685;
 }
 
 .stock-status-low {
-    color: var(--accent);
+    color: #bd6b04;
 }
 
 .stock-status-ok {
@@ -568,11 +568,11 @@ h2 {
 }
 
 .client-stock-badge.stock-status-out {
-    background: #fff1f1;
+    background: #edf0f4;
 }
 
 .client-stock-badge.stock-status-low {
-    background: #f2efff;
+    background: #fff4dd;
 }
 
 .client-stock-badge.stock-status-ok {
@@ -926,9 +926,9 @@ th {
 }
 
 .status-out {
-    background: #ffecec;
-    border-color: #f3b1b1;
-    color: #b42323;
+    background: #edf0f4;
+    border-color: #c8d0dc;
+    color: #5f6777;
 }
 
 .status-low {

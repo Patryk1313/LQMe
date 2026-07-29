@@ -4,6 +4,8 @@ const STRENGTH_USAGE = {
     18: 5.5,
 };
 
+const MIN_FLAVOR_USAGE_ML = 5;
+
 const DEFAULT_PRICE_LIST = {
     nicotine: {
         6: 35,
@@ -30,19 +32,19 @@ function getFlavorStatus(quantity) {
         };
     }
 
-    if (value < 10) {
+    if (value <= 5) {
         return {
             label: "Krytyczny",
             className: "status-critical",
-            hint: "Poniżej 10 ml. Zapas praktycznie się kończy.",
+            hint: "5 ml lub mniej. Wystarczy maksymalnie na jedną sztukę.",
         };
     }
 
-    if (value <= 30) {
+    if (value <= 15) {
         return {
             label: "Niski stan",
             className: "status-low",
-            hint: "Zostało maksymalnie 30 ml aromatu.",
+            hint: "Do 15 ml. Stan niski, ale nadal dostępny.",
         };
     }
 
@@ -104,7 +106,7 @@ function populateSaleFlavorOptions() {
     const saleFlavor = document.getElementById("saleFlavor");
     const currentValue = saleFlavor.value;
     const availableFlavors = data.flavors.filter(
-        (flavor) => Number(flavor.quantity) >= 10,
+        (flavor) => Number(flavor.quantity) >= MIN_FLAVOR_USAGE_ML,
     );
 
     saleFlavor.innerHTML = "";
