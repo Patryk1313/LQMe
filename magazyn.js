@@ -415,3 +415,13 @@ window.addEventListener("lqme:data-updated", () => {
     renderInventoryEditor();
     renderFlavorInventory();
 });
+
+window.addEventListener("focus", () => {
+    hydrateDataFromRemote().catch(() => {});
+});
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        hydrateDataFromRemote().catch(() => {});
+    }
+});

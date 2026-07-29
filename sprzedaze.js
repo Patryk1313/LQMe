@@ -24,10 +24,7 @@ function renderSalesStats() {
         (sum, sale) => sum + Number(sale.totalPrice || 0),
         0,
     );
-    const totalProfit = data.sales.reduce(
-        (sum, sale) => sum + Number(sale.saleQuantity || 0) * 5,
-        0,
-    );
+    const totalProfit = data.sales.length * 5;
     const maxValue = Math.max(totalRevenue, totalBottles, totalProfit, 1);
 
     const stats = [
@@ -52,7 +49,7 @@ function renderSalesStats() {
         {
             label: "Łączny profit",
             value: `${totalProfit} zł`,
-            subtitle: "Przyjęto 5 zł zysku na każdą sprzedaną sztukę",
+            subtitle: "Przyjęto 5 zł zysku na każdą zapisaną sprzedaż",
             fillPercent: Math.max(
                 10,
                 Math.round((totalProfit / maxValue) * 100),

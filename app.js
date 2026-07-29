@@ -409,3 +409,13 @@ window.addEventListener("lqme:data-updated", () => {
 window.addEventListener("lqme:sync-status-updated", () => {
     renderFirebaseStatus();
 });
+
+window.addEventListener("focus", () => {
+    hydrateDataFromRemote().catch(() => {});
+});
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        hydrateDataFromRemote().catch(() => {});
+    }
+});

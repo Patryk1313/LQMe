@@ -221,13 +221,42 @@
             return payload;
         }
 
+        const currentUser = auth?.currentUser;
+        if (!currentUser || currentUser.isAnonymous) {
+            setSyncState({
+                isConfigured: true,
+                isReady: false,
+                lastError:
+                    "Brak autoryzacji zapisu. Zaloguj się do panelu, aby zapisywać zmiany.",
+            });
+            return payload;
+        }
+
         try {
-            return await sync.writeData(payload);
+            const result = await sync.writeData(payload);
+            setSyncState({
+                isConfigured: true,
+                isReady: true,
+                lastError: null,
+            });
+            return result;
         } catch (error) {
             console.warn(
                 "LQME sync: zapis do Firestore nie powiódł się",
                 error,
             );
+
+            const isAuthError =
+                error?.code === "permission-denied" ||
+                error?.code === "unauthenticated";
+
+            setSyncState({
+                isConfigured: true,
+                isReady: false,
+                lastError: isAuthError
+                    ? "Zapis odrzucony przez Firestore. Zaloguj się na konto panelu i spróbuj ponownie."
+                    : error?.message || "Błąd zapisu do Firestore.",
+            });
             return payload;
         }
     }
