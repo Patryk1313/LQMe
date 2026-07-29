@@ -37,6 +37,7 @@
     let pendingWritePayload = null;
     let isWriteInFlight = false;
     let retryTimeoutId = null;
+    let refreshIntervalId = null;
 
     function updateUiStatus() {
         const statusEl = document.getElementById("firebaseStatus");
@@ -120,6 +121,41 @@
         }
 
         return documentData;
+    }
+
+    async function getRemoteSnapshotWithFallback() {
+        if (!documentRef) {
+            return null;
+        }
+
+        try {
+            return await documentRef.get({ source: "server" });
+        } catch (error) {
+            return documentRef.get();
+        }
+    }
+
+    async function refreshRemoteData() {
+        const snapshot = await getRemoteSnapshotWithFallback();
+        const remoteData = extractPayload(snapshot?.data?.());
+
+        if (remoteData) {
+            dispatchDataUpdate(remoteData);
+        }
+
+        return remoteData;
+    }
+
+    function ensureRefreshInterval() {
+        if (refreshIntervalId || !documentRef) {
+            return;
+        }
+
+        // Dodatkowy polling zabezpiecza synchronizację na telefonach,
+        // gdzie połączenie snapshot bywa usypiane przez przeglądarkę.
+        refreshIntervalId = setInterval(() => {
+            refreshRemoteData().catch(() => {});
+        }, 12000);
     }
 
     function clearRetryTimer() {
@@ -266,18 +302,23 @@
                     .collection(COLLECTION_NAME)
                     .doc(DOC_NAME);
 
-                const remoteSnapshot = await documentRef.get();
-                const remoteData = extractPayload(remoteSnapshot.data());
-                if (remoteData) {
-                    dispatchDataUpdate(remoteData);
-                }
+                await refreshRemoteData();
 
                 unsubscribe = documentRef.onSnapshot((snapshot) => {
                     const nextData = extractPayload(snapshot.data());
                     if (nextData) {
                         dispatchDataUpdate(nextData);
                     }
+                }, () => {
+                    setSyncState({
+                        isConfigured: true,
+                        isReady: false,
+                        lastError:
+                            "Połączenie realtime zostało przerwane. Trwa ponawianie synchronizacji.",
+                    });
                 });
+
+                ensureRefreshInterval();
 
                 setSyncState({
                     isConfigured: true,
@@ -305,8 +346,7 @@
                         return payload;
                     },
                     loadRemoteData: async () => {
-                        const snapshot = await documentRef.get();
-                        return extractPayload(snapshot.data());
+                        return refreshRemoteData();
                     },
                 };
             } catch (error) {
@@ -377,5 +417,15 @@
 
     window.addEventListener("DOMContentLoaded", () => {
         initializeFirebase().catch(() => {});
+    });
+
+    window.addEventListener("online", () => {
+        refreshRemoteData().catch(() => {});
+    });
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+            refreshRemoteData().catch(() => {});
+        }
     });
 })();
