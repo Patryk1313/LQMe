@@ -3,7 +3,7 @@ let activeFlavorDetailsEditId = null;
 let magazynPopupTimeoutId = null;
 
 function isValidFlavorQuantity(value) {
-    return Number.isInteger(value) && value >= 0 && value % 10 === 0;
+    return Number.isFinite(value) && value >= 0;
 }
 
 function clearMagazynMessages() {
@@ -119,7 +119,7 @@ function renderFlavorInventory() {
         <input
           type="number"
           min="0"
-          step="10"
+                    step="0.01"
           class="row-quantity-input"
           data-flavor-input="${flavor.id}"
           value="${Number(flavor.quantity)}"
@@ -208,7 +208,7 @@ function handleFlavorQuantityEdit(flavorId) {
 
     if (!isValidFlavorQuantity(newQuantity)) {
         showMagazynPopup(
-            "Błąd: ilość smaku musi być wielokrotnością 10.",
+            "Błąd: ilość smaku musi być liczbą większą lub równą 0.",
             true,
         );
         return;
@@ -319,7 +319,7 @@ function bindNewFlavorForm() {
 
         if (!isValidFlavorQuantity(quantity)) {
             showMagazynPopup(
-                "Błąd: ilość smaku musi być wielokrotnością 10.",
+                "Błąd: ilość smaku musi być liczbą większą lub równą 0.",
                 true,
             );
             return;
