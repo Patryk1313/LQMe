@@ -304,19 +304,22 @@
 
                 await refreshRemoteData();
 
-                unsubscribe = documentRef.onSnapshot((snapshot) => {
-                    const nextData = extractPayload(snapshot.data());
-                    if (nextData) {
-                        dispatchDataUpdate(nextData);
-                    }
-                }, () => {
-                    setSyncState({
-                        isConfigured: true,
-                        isReady: false,
-                        lastError:
-                            "Połączenie realtime zostało przerwane. Trwa ponawianie synchronizacji.",
-                    });
-                });
+                unsubscribe = documentRef.onSnapshot(
+                    (snapshot) => {
+                        const nextData = extractPayload(snapshot.data());
+                        if (nextData) {
+                            dispatchDataUpdate(nextData);
+                        }
+                    },
+                    () => {
+                        setSyncState({
+                            isConfigured: true,
+                            isReady: false,
+                            lastError:
+                                "Połączenie realtime zostało przerwane. Trwa ponawianie synchronizacji.",
+                        });
+                    },
+                );
 
                 ensureRefreshInterval();
 
