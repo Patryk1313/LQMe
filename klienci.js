@@ -111,9 +111,20 @@ function getFlavorRecipeCapacity(
     const availableFlavor = Number(
         remainingResources.flavorsById[flavorId] || 0,
     );
+    const availableNicotine = Number(
+        remainingResources.inventory[nicotineType] || 0,
+    );
+    const availableBase = Number(remainingResources.inventory.base || 0);
+    const availableBottles = Number(remainingResources.inventory.bottles || 0);
 
-    // W sklepie dostępność liczona jest wyłącznie po aromacie.
-    return floorRecipeCapacity(availableFlavor, FLAVOR_USAGE_PER_BOTTLE_ML);
+    const baseUsage = 60 - FLAVOR_USAGE_PER_BOTTLE_ML - nicotineUsage;
+
+    const flavorCap = floorRecipeCapacity(availableFlavor, FLAVOR_USAGE_PER_BOTTLE_ML);
+    const nicotineCap = floorRecipeCapacity(availableNicotine, nicotineUsage);
+    const baseCap = floorRecipeCapacity(availableBase, baseUsage);
+    const bottleCap = Math.max(0, Math.floor(availableBottles));
+
+    return Math.min(flavorCap, nicotineCap, baseCap, bottleCap);
 }
 
 function getFlavorProductionState(flavorId, data, cartItems) {
@@ -464,8 +475,23 @@ function getCartRequirements(cartItems, data) {
         }
     });
 
-    // Weryfikacja sklepu opiera się na dostępności aromatu,
-    // pozostałe surowce są rozliczane później po stronie realizacji.
+    const saltItem = getClientInventoryItem(data.inventory, "salt");
+    const nicotineItem = getClientInventoryItem(data.inventory, "nicotine");
+    const baseItem = getClientInventoryItem(data.inventory, "base");
+    const bottleItem = getClientInventoryItem(data.inventory, "bottles");
+
+    if (totals.totalNicotineUsageByType.salt > Number(saltItem?.quantity || 0)) {
+        shortages.push("Za mało soli nikotynowej");
+    }
+    if (totals.totalNicotineUsageByType.nicotine > Number(nicotineItem?.quantity || 0)) {
+        shortages.push("Za mało nikotyny");
+    }
+    if (totals.totalBaseUsage > Number(baseItem?.quantity || 0)) {
+        shortages.push("Za mało bazy VG/PG");
+    }
+    if (totals.totalBottles > Number(bottleItem?.quantity || 0)) {
+        shortages.push("Za mało butelek 60ml");
+    }
 
     return {
         totals,
