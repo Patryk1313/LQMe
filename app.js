@@ -349,6 +349,46 @@ function renderFirebaseStatus() {
     statusEl.textContent = "Sprawdzam połączenie z bazą...";
 }
 
+let currentFlavorSort = "custom";
+
+function moveFlavorOrder(flavorId, direction) {
+    const data = getData();
+    const index = data.flavors.findIndex((f) => f.id === flavorId);
+
+    if (index === -1) {
+        return;
+    }
+
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= data.flavors.length) {
+        return;
+    }
+
+    const updatedFlavors = [...data.flavors];
+    const [movedItem] = updatedFlavors.splice(index, 1);
+    updatedFlavors.splice(targetIndex, 0, movedItem);
+
+    setData({
+        ...data,
+        flavors: updatedFlavors,
+    });
+
+    renderDashboard();
+    populateSaleFlavorOptions();
+}
+
+function bindTableSortControls() {
+    const sortSelect = document.getElementById("flavorSortSelect");
+    if (!sortSelect) {
+        return;
+    }
+
+    sortSelect.addEventListener("change", (e) => {
+        currentFlavorSort = e.target.value;
+        renderDashboard();
+    });
+}
+
 function renderDashboard() {
     const data = getData();
     const cardsRoot = document.getElementById("cards");
@@ -368,16 +408,75 @@ function renderDashboard() {
         cardsRoot.appendChild(card);
     });
 
+    let displayFlavors = data.flavors.map((flavor, originalIndex) => ({
+        ...flavor,
+        originalIndex,
+    }));
+
+    if (currentFlavorSort === "name-asc") {
+        displayFlavors.sort((a, b) => a.name.localeCompare(b.name, "pl"));
+    } else if (currentFlavorSort === "name-desc") {
+        displayFlavors.sort((a, b) => b.name.localeCompare(a.name, "pl"));
+    } else if (currentFlavorSort === "quantity-desc") {
+        displayFlavors.sort((a, b) => Number(b.quantity) - Number(a.quantity));
+    } else if (currentFlavorSort === "quantity-asc") {
+        displayFlavors.sort((a, b) => Number(a.quantity) - Number(b.quantity));
+    } else if (currentFlavorSort === "bottles-desc") {
+        displayFlavors.sort(
+            (a, b) =>
+                Math.floor(Number(b.quantity) / 5) -
+                Math.floor(Number(a.quantity) / 5),
+        );
+    } else if (currentFlavorSort === "bottles-asc") {
+        displayFlavors.sort(
+            (a, b) =>
+                Math.floor(Number(a.quantity) / 5) -
+                Math.floor(Number(b.quantity) / 5),
+        );
+    }
+
     flavorsBody.innerHTML = "";
-    data.flavors.forEach((flavor) => {
+    displayFlavors.forEach((flavor, displayIndex) => {
         const status = getFlavorStatus(flavor.quantity);
+        const mlQuantity = Number(flavor.quantity);
+        const bottleCount = Math.floor((mlQuantity + 0.0001) / 5);
+        const isCustomSort = currentFlavorSort === "custom";
+
         const row = document.createElement("tr");
         row.innerHTML = `
-      <td>${flavor.name}</td>
+      <td class="index-cell">${displayIndex + 1}.</td>
+      <td class="font-weight-bold">${flavor.name}</td>
       <td>${flavor.description}</td>
-      <td>${Number(flavor.quantity)} ${flavor.unit}</td>
+      <td>${mlQuantity} ml</td>
+      <td><strong>${bottleCount}</strong> szt.</td>
       <td><span class="status-badge ${status.className}" title="${status.hint}">${status.label}</span></td>
+      <td class="reorder-cell">
+        ${
+            isCustomSort
+                ? `
+          <button type="button" class="reorder-btn" data-move-up="${flavor.id}" ${flavor.originalIndex === 0 ? "disabled" : ""} title="Przesuń w górę">▲</button>
+          <button type="button" class="reorder-btn" data-move-down="${flavor.id}" ${flavor.originalIndex === data.flavors.length - 1 ? "disabled" : ""} title="Przesuń w dół">▼</button>
+        `
+                : '<span class="muted font-small">—</span>'
+        }
+      </td>
     `;
+
+        if (isCustomSort) {
+            const upBtn = row.querySelector("[data-move-up]");
+            const downBtn = row.querySelector("[data-move-down]");
+
+            if (upBtn) {
+                upBtn.addEventListener("click", () =>
+                    moveFlavorOrder(flavor.id, -1),
+                );
+            }
+            if (downBtn) {
+                downBtn.addEventListener("click", () =>
+                    moveFlavorOrder(flavor.id, 1),
+                );
+            }
+        }
 
         flavorsBody.appendChild(row);
     });
@@ -398,6 +497,7 @@ async function initializeAppData() {
 bindSaleModal();
 populateSaleFlavorOptions();
 bindSaleForm();
+bindTableSortControls();
 renderDashboard();
 renderFirebaseStatus();
 initializeAppData();

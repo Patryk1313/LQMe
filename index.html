@@ -61,15 +61,30 @@
                             <p class="table-eyebrow">Smaki</p>
                             <h2>Lista dostępnych smaków LQ</h2>
                         </div>
+                        <div class="table-controls">
+                            <label for="flavorSortSelect" class="muted">Sortuj wg:</label>
+                            <select id="flavorSortSelect" class="table-sort-select">
+                                <option value="custom">Kolejność (domyślna)</option>
+                                <option value="name-asc">Nazwa (A-Z)</option>
+                                <option value="name-desc">Nazwa (Z-A)</option>
+                                <option value="quantity-desc">Ilość (najwięcej)</option>
+                                <option value="quantity-asc">Ilość (najmniej)</option>
+                                <option value="bottles-desc">Liczba sztuk (najwięcej)</option>
+                                <option value="bottles-asc">Liczba sztuk (najmniej)</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="table-wrap">
                         <table>
                             <thead>
                                 <tr>
+                                    <th style="width: 50px;">Lp.</th>
                                     <th>Smak</th>
                                     <th>Opis</th>
-                                    <th>Ilość</th>
+                                    <th>Pojemność (ml)</th>
+                                    <th>Liczba szt. (LQ 60ml)</th>
                                     <th>Status</th>
+                                    <th style="width: 120px; text-align: center;">Kolejność</th>
                                 </tr>
                             </thead>
                             <tbody id="flavorsBody"></tbody>

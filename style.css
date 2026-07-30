@@ -793,6 +793,65 @@ h2 {
     border-radius: var(--radius-md);
 }
 
+.table-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.table-sort-select {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(26, 29, 39, 0.15);
+    background: #ffffff;
+    font-size: 0.88rem;
+    font-family: inherit;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.index-cell {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.reorder-cell {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.reorder-btn {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    line-height: 1;
+    border-radius: 6px;
+    background: #f0f2f8;
+    border: 1px solid rgba(26, 29, 39, 0.1);
+    color: var(--text);
+    cursor: pointer;
+    transition: background 150ms ease;
+    margin: 0 1px;
+}
+
+.reorder-btn:hover:not(:disabled) {
+    background: var(--accent);
+    color: #ffffff;
+}
+
+.reorder-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.font-weight-bold {
+    font-weight: 700;
+}
+
+.font-small {
+    font-size: 0.85rem;
+}
+
 .sale-form {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
