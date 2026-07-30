@@ -32,6 +32,14 @@
                 >
                     Sprawdzam połączenie z bazą...
                 </div>
+                <button
+                    type="button"
+                    class="theme-toggle-btn"
+                    data-theme-toggle
+                    aria-label="Przełącz motyw"
+                >
+                    🌙 <span class="theme-btn-text">Ciemny motyw</span>
+                </button>
             </header>
 
             <main class="content">
@@ -62,15 +70,30 @@
                             <h2>Lista dostępnych smaków LQ</h2>
                         </div>
                         <div class="table-controls">
-                            <label for="flavorSortSelect" class="muted">Sortuj wg:</label>
-                            <select id="flavorSortSelect" class="table-sort-select">
-                                <option value="custom">Kolejność (domyślna)</option>
+                            <label for="flavorSortSelect" class="muted"
+                                >Sortuj wg:</label
+                            >
+                            <select
+                                id="flavorSortSelect"
+                                class="table-sort-select"
+                            >
+                                <option value="custom">
+                                    Kolejność (domyślna)
+                                </option>
                                 <option value="name-asc">Nazwa (A-Z)</option>
                                 <option value="name-desc">Nazwa (Z-A)</option>
-                                <option value="quantity-desc">Ilość (najwięcej)</option>
-                                <option value="quantity-asc">Ilość (najmniej)</option>
-                                <option value="bottles-desc">Liczba sztuk (najwięcej)</option>
-                                <option value="bottles-asc">Liczba sztuk (najmniej)</option>
+                                <option value="quantity-desc">
+                                    Ilość (najwięcej)
+                                </option>
+                                <option value="quantity-asc">
+                                    Ilość (najmniej)
+                                </option>
+                                <option value="bottles-desc">
+                                    Liczba sztuk (najwięcej)
+                                </option>
+                                <option value="bottles-asc">
+                                    Liczba sztuk (najmniej)
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -78,13 +101,17 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="width: 50px;">Lp.</th>
+                                    <th style="width: 50px">Lp.</th>
                                     <th>Smak</th>
                                     <th>Opis</th>
                                     <th>Pojemność (ml)</th>
                                     <th>Liczba szt. (LQ 60ml)</th>
                                     <th>Status</th>
-                                    <th style="width: 120px; text-align: center;">Kolejność</th>
+                                    <th
+                                        style="width: 120px; text-align: center"
+                                    >
+                                        Kolejność
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody id="flavorsBody"></tbody>
@@ -173,9 +200,7 @@
                 </form>
 
                 <div class="sale-info">
-                    <p>
-                        Podaj ile ml aromatu zużywasz na 1 szt. LQ 60 ml.
-                    </p>
+                    <p>Podaj ile ml aromatu zużywasz na 1 szt. LQ 60 ml.</p>
                     <p>6 mg = 2 ml soli albo nikotyny</p>
                     <p>12 mg = 3.5 ml soli albo nikotyny</p>
                     <p>18 mg = 5.5 ml soli albo nikotyny</p>
@@ -197,6 +222,7 @@
             };
         </script>
         <script src="firebase-sync.js"></script>
+        <script src="theme.js"></script>
         <script src="data.js"></script>
         <script src="auth.js"></script>
         <script src="app.js"></script>

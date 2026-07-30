@@ -16,6 +16,41 @@
     --radius-lg: 18px;
     --radius-md: 14px;
     --radius-sm: 10px;
+    --card-gradient: linear-gradient(180deg, #ffffff 0%, #fbfbfe 100%);
+    --body-bg-gradient: radial-gradient(
+            circle at top left,
+            rgba(107, 78, 255, 0.1),
+            transparent 26%
+        ),
+        linear-gradient(180deg, #fafbff 0%, var(--bg) 100%);
+    --modal-backdrop: rgba(18, 20, 29, 0.55);
+    --input-bg: #ffffff;
+    --input-border: rgba(26, 29, 39, 0.15);
+}
+
+html.dark-theme {
+    --bg: #12131a;
+    --surface: #1e202d;
+    --surface-soft: #181924;
+    --line: #2d3042;
+    --text: #e8eaef;
+    --muted: #9aa0b4;
+    --accent: #8266ff;
+    --accent-soft: #a895ff;
+    --sidebar: #14151f;
+    --sidebar-soft: #1d1e2c;
+    --shadow-soft: 0 20px 50px rgba(0, 0, 0, 0.4);
+    --shadow-card: 0 14px 28px rgba(0, 0, 0, 0.3);
+    --card-gradient: linear-gradient(180deg, #1e202d 0%, #181924 100%);
+    --body-bg-gradient: radial-gradient(
+            circle at top left,
+            rgba(130, 102, 255, 0.15),
+            transparent 30%
+        ),
+        linear-gradient(180deg, #161722 0%, var(--bg) 100%);
+    --modal-backdrop: rgba(0, 0, 0, 0.75);
+    --input-bg: #181924;
+    --input-border: #2d3042;
 }
 
 * {
@@ -26,17 +61,11 @@ body {
     margin: 0;
     font-family: "Poppins", "Segoe UI", Arial, sans-serif;
     color: var(--text);
-    background:
-        radial-gradient(
-            circle at top left,
-            rgba(107, 78, 255, 0.1),
-            transparent 26%
-        ),
-        linear-gradient(180deg, #fafbff 0%, var(--bg) 100%);
+    background: var(--body-bg-gradient);
 }
 
 body.client-view {
-    background: #f3f4f8;
+    background: var(--bg);
 }
 
 .auth-page {
@@ -75,7 +104,7 @@ body.client-view {
 
 .secondary-action-button {
     border: 1px solid rgba(107, 78, 255, 0.24);
-    background: #ffffff;
+    background: var(--surface);
     color: var(--accent);
     border-radius: 999px;
     padding: 10px 16px;
@@ -95,8 +124,8 @@ body.client-view {
 }
 
 .price-card {
-    border: 1px solid rgba(26, 29, 39, 0.08);
-    background: #ffffff;
+    border: 1px solid var(--line);
+    background: var(--surface);
     border-radius: var(--radius-md);
     padding: 20px;
     box-shadow: var(--shadow-card);
@@ -148,8 +177,8 @@ body.client-view {
 
 .client-header {
     margin-bottom: 24px;
-    border: 1px solid rgba(26, 29, 39, 0.1);
-    background: #ffffff;
+    border: 1px solid var(--line);
+    background: var(--surface);
     padding: 30px;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-soft);
@@ -203,8 +232,8 @@ body.client-view {
     display: inline-flex;
     justify-content: center;
     border: 1px solid rgba(107, 78, 255, 0.22);
-    background: rgba(255, 255, 255, 0.82);
-    color: #3f3f63;
+    background: var(--surface-soft);
+    color: var(--text);
     border-radius: 999px;
     padding: 7px 12px;
     font-size: 0.78rem;
@@ -221,13 +250,13 @@ body.client-view {
     display: inline-flex;
     align-items: center;
     text-decoration: none;
-    border: 1px solid transparent;
+    border: 1px solid var(--line);
     border-radius: 999px;
     padding: 10px 18px;
     font-weight: 700;
     font-size: 0.88rem;
-    color: #2c2f3b;
-    background: rgba(255, 255, 255, 0.78);
+    color: var(--text);
+    background: var(--surface);
 }
 
 .client-menu a.active {
@@ -254,7 +283,8 @@ body.client-view {
 }
 
 .topbar {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 24px;
     align-content: start;
     min-height: calc(100vh - 56px);
@@ -266,6 +296,43 @@ body.client-view {
     top: 16px;
     color: #ffffff;
     align-self: start;
+}
+
+.theme-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 160ms ease, border-color 160ms ease;
+    width: 100%;
+    margin-top: auto;
+}
+
+.storefront-theme-btn {
+    width: auto;
+    margin-top: 12px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--line);
+}
+
+.storefront-theme-btn:hover {
+    background: var(--surface-soft);
+    border-color: var(--accent);
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: none;
 }
 
 h1 {
@@ -390,7 +457,7 @@ h2 {
             rgba(107, 78, 255, 0.1),
             rgba(107, 78, 255, 0) 44%
         ),
-        #ffffff;
+        var(--surface);
 }
 
 .page-hero-copy h2 {
@@ -463,8 +530,8 @@ h2 {
 }
 
 .card {
-    border: 1px solid rgba(26, 29, 39, 0.08);
-    background: linear-gradient(180deg, #ffffff 0%, #fbfbfe 100%);
+    border: 1px solid var(--line);
+    background: var(--card-gradient);
     padding: 18px;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-card);
@@ -513,7 +580,7 @@ h2 {
 
 .client-flavor-description {
     margin: 2px 0 6px;
-    color: #303030;
+    color: var(--muted);
     font-size: 0.9rem;
 }
 
@@ -585,8 +652,8 @@ h2 {
     gap: 14px;
     align-items: start;
     min-height: 172px;
-    border-color: rgba(26, 29, 39, 0.1);
-    background: #ffffff;
+    border: 1px solid var(--line);
+    background: var(--surface);
     transition:
         transform 180ms ease,
         box-shadow 180ms ease,
@@ -687,7 +754,7 @@ h2 {
 
 .cart-summary-box {
     border: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.82);
+    background: var(--surface);
     padding: 16px;
     border-radius: var(--radius-md);
 }
@@ -775,12 +842,8 @@ h2 {
 }
 
 .panel {
-    border: 1px solid rgba(17, 17, 17, 0.08);
-    background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.98),
-        rgba(248, 248, 246, 0.98)
-    );
+    border: 1px solid var(--line);
+    background: var(--surface);
     padding: 18px;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-soft);
@@ -802,8 +865,8 @@ h2 {
 .table-sort-select {
     padding: 6px 12px;
     border-radius: 8px;
-    border: 1px solid rgba(26, 29, 39, 0.15);
-    background: #ffffff;
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
     font-size: 0.88rem;
     font-family: inherit;
     color: var(--text);
@@ -826,8 +889,8 @@ h2 {
     font-size: 0.75rem;
     line-height: 1;
     border-radius: 6px;
-    background: #f0f2f8;
-    border: 1px solid rgba(26, 29, 39, 0.1);
+    background: var(--surface-soft);
+    border: 1px solid var(--line);
     color: var(--text);
     cursor: pointer;
     transition: background 150ms ease;
@@ -877,7 +940,7 @@ h2 {
     padding-top: 14px;
     border-top: 1px solid var(--line);
     font-size: 0.92rem;
-    color: #303030;
+    color: var(--muted);
 }
 
 .sale-info p {
@@ -904,17 +967,18 @@ h2 {
 .modal-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.42);
+    background: var(--modal-backdrop);
 }
 
 .modal-dialog {
     position: relative;
     width: min(760px, calc(100vw - 32px));
-    background: #ffffff;
-    border: 1px solid rgba(17, 17, 17, 0.08);
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--line);
     padding: 22px;
     border-radius: 18px;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
 }
 
 .copy-modal-dialog {
@@ -923,7 +987,7 @@ h2 {
 
 .copy-modal-message {
     margin: 8px 0 0;
-    color: #3a3f52;
+    color: var(--muted);
     line-height: 1.5;
 }
 
@@ -954,7 +1018,8 @@ table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.93rem;
-    background: rgba(255, 255, 255, 0.96);
+    background: var(--surface);
+    color: var(--text);
 }
 
 th,
@@ -966,9 +1031,9 @@ td {
 }
 
 th {
-    background: #f8f9fd;
+    background: var(--surface-soft);
     font-weight: 700;
-    color: #63697f;
+    color: var(--muted);
     text-transform: uppercase;
     font-size: 0.75rem;
     letter-spacing: 0.08em;
@@ -1008,19 +1073,13 @@ th {
     border-color: #bde6d5;
 }
 
-input[type="number"] {
+input[type="number"],
+input[type="text"],
+select {
     width: 100%;
-    border: 1px solid var(--line);
-    background: #ffffff;
-    padding: 7px 8px;
-    font: inherit;
-    border-radius: 10px;
-}
-
-input[type="text"] {
-    width: 100%;
-    border: 1px solid var(--line);
-    background: #ffffff;
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--text);
     padding: 7px 8px;
     font: inherit;
     border-radius: 10px;
@@ -1088,9 +1147,9 @@ button:hover {
 }
 
 .table-button-secondary {
-    background: #ffffff;
-    color: #242734;
-    border-color: #d8dcec;
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--line);
 }
 
 .table-button-danger {
@@ -1107,18 +1166,15 @@ button:hover {
     align-items: center;
 }
 
-.row-quantity-input:disabled {
-    background: #f3f3f3;
-    color: #6a6a6a;
-}
-
+.row-quantity-input:disabled,
 .row-text-input:disabled {
-    background: #f3f3f3;
-    color: #6a6a6a;
+    background: var(--surface-soft);
+    color: var(--muted);
+    border-color: var(--line);
 }
 
 .message {
-    color: #222222;
+    color: var(--text);
     font-size: 0.92rem;
 }
 
