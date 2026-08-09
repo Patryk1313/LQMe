@@ -25,10 +25,12 @@
         const buttons = document.querySelectorAll("[data-theme-toggle]");
         buttons.forEach((btn) => {
             if (theme === "dark") {
-                btn.innerHTML = '☀️ <span class="theme-btn-text">Jasny motyw</span>';
+                btn.innerHTML =
+                    '☀️ <span class="theme-btn-text">Jasny motyw</span>';
                 btn.setAttribute("aria-label", "Przełącz na jasny motyw");
             } else {
-                btn.innerHTML = '🌙 <span class="theme-btn-text">Ciemny motyw</span>';
+                btn.innerHTML =
+                    '🌙 <span class="theme-btn-text">Ciemny motyw</span>';
                 btn.setAttribute("aria-label", "Przełącz na ciemny motyw");
             }
         });

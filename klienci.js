@@ -119,7 +119,10 @@ function getFlavorRecipeCapacity(
 
     const baseUsage = 60 - FLAVOR_USAGE_PER_BOTTLE_ML - nicotineUsage;
 
-    const flavorCap = floorRecipeCapacity(availableFlavor, FLAVOR_USAGE_PER_BOTTLE_ML);
+    const flavorCap = floorRecipeCapacity(
+        availableFlavor,
+        FLAVOR_USAGE_PER_BOTTLE_ML,
+    );
     const nicotineCap = floorRecipeCapacity(availableNicotine, nicotineUsage);
     const baseCap = floorRecipeCapacity(availableBase, baseUsage);
     const bottleCap = Math.max(0, Math.floor(availableBottles));
@@ -480,10 +483,15 @@ function getCartRequirements(cartItems, data) {
     const baseItem = getClientInventoryItem(data.inventory, "base");
     const bottleItem = getClientInventoryItem(data.inventory, "bottles");
 
-    if (totals.totalNicotineUsageByType.salt > Number(saltItem?.quantity || 0)) {
+    if (
+        totals.totalNicotineUsageByType.salt > Number(saltItem?.quantity || 0)
+    ) {
         shortages.push("Za mało soli nikotynowej");
     }
-    if (totals.totalNicotineUsageByType.nicotine > Number(nicotineItem?.quantity || 0)) {
+    if (
+        totals.totalNicotineUsageByType.nicotine >
+        Number(nicotineItem?.quantity || 0)
+    ) {
         shortages.push("Za mało nikotyny");
     }
     if (totals.totalBaseUsage > Number(baseItem?.quantity || 0)) {
