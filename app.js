@@ -2,6 +2,7 @@ const STRENGTH_USAGE = {
     6: 2,
     12: 3.5,
     18: 5.5,
+    20: 6,
 };
 
 const MIN_FLAVOR_USAGE_ML = 5;

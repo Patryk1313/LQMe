@@ -14,7 +14,7 @@
     </head>
     <body class="client-view">
         <div class="client-page">
-            <header class="client-header">
+            <!-- <header class="client-header">
                 <div class="client-header-content">
                     <div class="client-brand">
                         <p class="client-kicker">Sklep LQMe</p>
@@ -31,7 +31,7 @@
                     aria-live="polite"
                 >
                     Sprawdzam połączenie z bazą...
-                </div>
+                </div> -->
                 <button
                     type="button"
                     class="theme-toggle-btn storefront-theme-btn"
@@ -44,10 +44,19 @@
 
             <main class="client-content">
                 <section class="panel client-products-panel">
-                    <div class="section-head">
+                    <div class="section-head section-head-search">
                         <div>
                             <p class="table-eyebrow">Oferta</p>
                             <h2>Dostępne smaki</h2>
+                        </div>
+                        <div class="storefront-search-wrap">
+                            <input
+                                type="text"
+                                id="flavorSearchInput"
+                                class="storefront-search-input"
+                                placeholder="Szukaj smaku..."
+                                aria-label="Wyszukaj smak"
+                            />
                         </div>
                     </div>
                     <div id="clientFlavorList" class="flavor-grid"></div>
@@ -130,6 +139,7 @@
                             <option value="6">6 mg</option>
                             <option value="12">12 mg</option>
                             <option value="18">18 mg</option>
+                            <option value="20">20 mg</option>
                         </select>
                     </div>
 

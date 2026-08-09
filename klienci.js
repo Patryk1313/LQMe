@@ -2,6 +2,7 @@ const CLIENT_STRENGTH_USAGE = {
     6: 2,
     12: 3.5,
     18: 5.5,
+    20: 6,
 };
 
 const FLAVOR_USAGE_PER_BOTTLE_ML = 5;
@@ -135,7 +136,7 @@ function getFlavorProductionState(flavorId, data, cartItems) {
     let maxPossible = 0;
 
     ["salt", "nicotine"].forEach((nicotineType) => {
-        [6, 12, 18].forEach((strength) => {
+        [6, 12, 18, 20].forEach((strength) => {
             maxPossible = Math.max(
                 maxPossible,
                 getFlavorRecipeCapacity(
@@ -395,9 +396,31 @@ function getClientInventoryItem(inventory, itemId) {
 function renderClientFlavors() {
     const data = getData();
     const clientFlavorList = document.getElementById("clientFlavorList");
+    const searchInput = document.getElementById("flavorSearchInput");
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
 
     clientFlavorList.innerHTML = "";
-    data.flavors.forEach((flavor) => {
+
+    const filteredFlavors = data.flavors.filter((flavor) => {
+        if (!query) {
+            return true;
+        }
+        const nameMatch = flavor.name.toLowerCase().includes(query);
+        const descMatch = (flavor.description || "").toLowerCase().includes(query);
+        return nameMatch || descMatch;
+    });
+
+    if (filteredFlavors.length === 0) {
+        const emptyMsg = document.createElement("p");
+        emptyMsg.className = "muted store-no-results";
+        emptyMsg.textContent = query
+            ? `Brak smaków pasujących do wyszukiwania "${query}".`
+            : "Brak dostępnych smaków.";
+        clientFlavorList.appendChild(emptyMsg);
+        return;
+    }
+
+    filteredFlavors.forEach((flavor) => {
         const productionState = getFlavorProductionState(
             flavor.id,
             data,
@@ -764,9 +787,21 @@ function renderCart() {
     updateCopyOrderButtonState();
 }
 
+function bindFlavorSearch() {
+    const searchInput = document.getElementById("flavorSearchInput");
+    if (!searchInput) {
+        return;
+    }
+
+    searchInput.addEventListener("input", () => {
+        renderClientFlavors();
+    });
+}
+
 renderClientFlavors();
 renderCart();
 bindClientOrderModal();
 bindStorefrontInventorySync();
 bindCopyOrderButton();
 bindClientCopyModal();
+bindFlavorSearch();
