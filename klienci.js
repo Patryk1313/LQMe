@@ -78,12 +78,12 @@ function getRemainingResources(cartItems, data) {
             salt: Math.max(
                 0,
                 Number(salt?.quantity || 0) -
-                    result.totals.totalNicotineUsageByType.salt,
+                result.totals.totalNicotineUsageByType.salt,
             ),
             nicotine: Math.max(
                 0,
                 Number(nicotine?.quantity || 0) -
-                    result.totals.totalNicotineUsageByType.nicotine,
+                result.totals.totalNicotineUsageByType.nicotine,
             ),
             base: Math.max(
                 0,
@@ -692,14 +692,10 @@ function showClientPopup(message) {
     }, 2600);
 }
 
-function syncStorefrontState(showMessage = false) {
+function syncStorefrontState() {
     renderClientFlavors();
     renderCart();
     updateClientOrderAvailability();
-
-    if (showMessage) {
-        showClientPopup("Stan magazynu został zaktualizowany po sprzedaży.");
-    }
 }
 
 function bindStorefrontInventorySync() {
@@ -708,7 +704,7 @@ function bindStorefrontInventorySync() {
             return;
         }
 
-        syncStorefrontState(true);
+        syncStorefrontState();
     });
 
     window.addEventListener("focus", () => {
@@ -736,15 +732,15 @@ function bindStorefrontInventorySync() {
     });
 
     window.addEventListener("lqme:data-updated", () => {
-        syncStorefrontState(true);
+        syncStorefrontState();
     });
 
     window.addEventListener("DOMContentLoaded", () => {
         hydrateDataFromRemote()
             .then(() => {
-                syncStorefrontState(true);
+                syncStorefrontState();
             })
-            .catch(() => {});
+            .catch(() => { });
     });
 }
 
