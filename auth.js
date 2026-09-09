@@ -281,12 +281,19 @@
             return;
         }
 
-        auth.onAuthStateChanged((user) => {
-            if (hasAuthenticatedUser(user)) {
-                updateAuthLinks();
-            } else {
-                redirectToLogin();
-            }
+        await new Promise((resolve) => {
+            let unsubscribe = null;
+            unsubscribe = auth.onAuthStateChanged((user) => {
+                unsubscribe?.();
+
+                if (hasAuthenticatedUser(user)) {
+                    updateAuthLinks();
+                } else {
+                    redirectToLogin();
+                }
+
+                resolve();
+            });
         });
     }
 

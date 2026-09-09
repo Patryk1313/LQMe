@@ -11,8 +11,9 @@ function formatClientDate(value) {
 
 function getClientSummaries() {
     const summaries = new Map();
+    const data = getData();
 
-    getData().clients.forEach((client) => {
+    (data.clients || []).forEach((client) => {
         summaries.set(client.key, {
             name: client.name,
             orders: 0,
@@ -23,7 +24,7 @@ function getClientSummaries() {
         });
     });
 
-    getData().sales.forEach((sale) => {
+    (data.sales || []).forEach((sale) => {
         const name = (sale.customerName || "Brak danych").trim() || "Brak danych";
         const key = name.toLocaleLowerCase("pl-PL");
         const existing = summaries.get(key) || {
