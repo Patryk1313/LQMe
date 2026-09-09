@@ -13,9 +13,9 @@
     --sidebar-soft: #2a2c37;
     --shadow-soft: 0 20px 50px rgba(22, 24, 34, 0.08);
     --shadow-card: 0 14px 28px rgba(22, 24, 34, 0.06);
-    --radius-lg: 18px;
-    --radius-md: 14px;
-    --radius-sm: 10px;
+    --radius-lg: 10px;
+    --radius-md: 8px;
+    --radius-sm: 6px;
     --card-gradient: linear-gradient(180deg, #ffffff 0%, #fbfbfe 100%);
     --body-bg-gradient:
         radial-gradient(
@@ -64,6 +64,7 @@ body {
     font-family: "Poppins", "Segoe UI", Arial, sans-serif;
     color: var(--text);
     background: var(--body-bg-gradient);
+    overflow-x: hidden;
 }
 
 body.client-view {
@@ -162,12 +163,12 @@ body.client-view {
 }
 
 .page {
-    width: min(1440px, 100%);
+    width: 100%;
     margin: 0 auto;
-    padding: 20px 16px 40px;
+    padding: 0;
     display: grid;
-    grid-template-columns: 272px minmax(0, 1fr);
-    gap: 24px;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 0;
     align-items: start;
 }
 
@@ -287,15 +288,18 @@ body.client-view {
 .topbar {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 28px;
     align-content: start;
-    min-height: calc(100vh - 56px);
-    padding: 24px 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    background: linear-gradient(180deg, var(--sidebar) 0%, #171821 100%);
-    border-radius: 22px;
+    min-height: 100vh;
+    padding: 28px 0 22px;
+    border: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 28%),
+        var(--sidebar);
+    border-radius: 0;
     position: sticky;
-    top: 16px;
+    top: 0;
     color: #ffffff;
     align-self: start;
 }
@@ -305,9 +309,9 @@ body.client-view {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 10px 14px;
+    padding: 11px 14px;
     border-radius: var(--radius-sm);
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.12);
     color: #ffffff;
     font-size: 0.88rem;
@@ -316,8 +320,8 @@ body.client-view {
     transition:
         background 160ms ease,
         border-color 160ms ease;
-    width: 100%;
-    margin-top: auto;
+    width: calc(100% - 36px);
+    margin: auto 18px 0;
 }
 
 .storefront-theme-btn {
@@ -363,7 +367,7 @@ h2 {
 
 .menu {
     display: grid;
-    gap: 8px;
+    gap: 4px;
     margin-bottom: 0;
 }
 
@@ -371,41 +375,60 @@ h2 {
     text-decoration: none;
     color: rgba(255, 255, 255, 0.78);
     border: 1px solid transparent;
-    padding: 12px 14px;
+    position: relative;
+    padding: 12px 20px 12px 24px;
     font-size: 0.92rem;
     border-radius: var(--radius-sm);
     font-weight: 600;
     transition:
         background 160ms ease,
         transform 160ms ease,
-        border-color 160ms ease;
+        border-color 160ms ease,
+        color 160ms ease;
 }
 
 .menu a:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.07);
     border-color: rgba(255, 255, 255, 0.08);
-    transform: translateX(2px);
+    color: #ffffff;
 }
 
 .menu a.active {
-    background: linear-gradient(90deg, var(--accent) 0%, #8066ff 100%);
-    border-color: transparent;
+    background: rgba(130, 102, 255, 0.18);
+    border-color: rgba(157, 139, 255, 0.24);
     color: #ffffff;
+}
+
+.menu a.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 7px;
+    bottom: 7px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--accent-soft);
 }
 
 .firebase-status {
     margin-top: auto;
     margin-bottom: 0;
     border: 1px solid rgba(255, 255, 255, 0.16);
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.05);
     color: rgba(255, 255, 255, 0.9);
-    padding: 10px 12px;
-    border-radius: 12px;
+    padding: 11px 12px;
+    border-radius: 8px;
     font-size: 0.86rem;
     font-weight: 600;
     line-height: 1.4;
     align-self: stretch;
     justify-self: stretch;
+    margin-left: 18px;
+    margin-right: 18px;
+}
+
+.firebase-status-hidden {
+    display: none;
 }
 
 .firebase-status-client {
@@ -447,6 +470,8 @@ h2 {
     display: grid;
     gap: 18px;
     min-width: 0;
+    width: 100%;
+    padding: 28px 32px 48px;
 }
 
 .page-hero {
@@ -492,7 +517,7 @@ h2 {
     font-size: 0.98rem;
     font-weight: 700;
     letter-spacing: 0.01em;
-    border-radius: 15px;
+    border-radius: 8px;
 }
 
 .hero-action-button:hover {
@@ -515,13 +540,15 @@ h2 {
 .storefront-search-input {
     width: 100%;
     padding: 9px 14px;
-    border-radius: 12px;
+    border-radius: 8px;
     border: 1px solid var(--input-border);
     background: var(--input-bg);
     color: var(--text);
     font-size: 0.9rem;
     font-family: inherit;
-    transition: border-color 150ms ease, box-shadow 150ms ease;
+    transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
 }
 
 .storefront-search-input:focus {
@@ -562,8 +589,49 @@ h2 {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(220px, 1fr));
+    grid-template-columns: repeat(4, minmax(190px, 1fr));
     gap: 14px;
+}
+
+.chart-panel {
+    min-width: 0;
+}
+
+.chart-wrap {
+    position: relative;
+    height: 280px;
+}
+
+.client-detail-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin: 16px 0;
+}
+
+.client-detail-stats div {
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface-soft);
+}
+
+.client-detail-stats strong,
+.client-detail-stats span {
+    display: block;
+}
+
+.client-detail-stats strong {
+    font-size: 1.15rem;
+}
+
+.client-detail-stats span {
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+.client-detail-table-wrap {
+    max-height: 360px;
 }
 
 .card {
@@ -762,7 +830,7 @@ h2 {
     background: #ffffff;
     padding: 8px;
     font: inherit;
-    border-radius: 10px;
+    border-radius: 6px;
 }
 
 .client-cart-button {
@@ -833,7 +901,7 @@ h2 {
     color: #ffffff;
     padding: 14px 16px;
     z-index: 30;
-    border-radius: 12px;
+    border-radius: 8px;
     box-shadow: 0 18px 36px rgba(0, 0, 0, 0.18);
 }
 
@@ -888,6 +956,8 @@ h2 {
 
 .table-wrap {
     overflow-x: auto;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
     border: 1px solid var(--line);
     background: var(--surface-soft);
     border-radius: var(--radius-md);
@@ -954,7 +1024,7 @@ h2 {
 
 .sale-form {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 12px;
 }
 
@@ -964,7 +1034,7 @@ h2 {
     background: #ffffff;
     padding: 7px 8px;
     font: inherit;
-    border-radius: 10px;
+    border-radius: 6px;
 }
 
 .sale-actions {
@@ -1014,7 +1084,7 @@ h2 {
     color: var(--text);
     border: 1px solid var(--line);
     padding: 22px;
-    border-radius: 18px;
+    border-radius: 10px;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
 }
 
@@ -1053,10 +1123,53 @@ h2 {
 
 table {
     width: 100%;
+    min-width: 680px;
     border-collapse: collapse;
     font-size: 0.93rem;
     background: var(--surface);
     color: var(--text);
+}
+
+.sales-table {
+    min-width: 0;
+    table-layout: auto;
+    font-size: 0.84rem;
+}
+
+.sales-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    white-space: nowrap;
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+.sales-table td {
+    white-space: nowrap;
+    padding: 10px 8px;
+}
+
+.sales-table tbody tr:nth-child(even) {
+    background: var(--surface-soft);
+}
+
+.sales-table tbody tr:hover {
+    background: rgba(47, 143, 131, 0.08);
+}
+
+.sales-table td:nth-child(2) {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.sales-table td:nth-child(7) {
+    font-weight: 700;
+    color: var(--text);
+}
+
+.sales-table .actions-cell {
+    min-width: 154px;
 }
 
 th,
@@ -1119,7 +1232,7 @@ select {
     color: var(--text);
     padding: 7px 8px;
     font: inherit;
-    border-radius: 10px;
+    border-radius: 6px;
 }
 
 .actions-row {
@@ -1164,7 +1277,7 @@ button {
     padding: 10px 15px;
     cursor: pointer;
     font: inherit;
-    border-radius: 15px;
+    border-radius: 8px;
     transition:
         transform 160ms ease,
         opacity 160ms ease,
@@ -1226,13 +1339,13 @@ button:hover {
 @media (max-width: 900px) {
     .page {
         grid-template-columns: 1fr;
-        padding: 16px 12px 32px;
     }
 
     .topbar {
         min-height: auto;
         position: static;
         gap: 14px;
+        padding: 18px 0;
     }
 
     .menu {
@@ -1267,7 +1380,7 @@ button:hover {
 
 @media (max-width: 620px) {
     .page {
-        gap: 16px;
+        gap: 0;
     }
 
     .client-page {
@@ -1299,8 +1412,12 @@ button:hover {
     }
 
     .topbar {
-        padding: 18px;
-        border-radius: 18px;
+        padding: 18px 0;
+        border-radius: 0;
+    }
+
+    .content {
+        padding: 18px 14px 32px;
     }
 
     .menu {
@@ -1337,6 +1454,10 @@ button:hover {
         padding: 16px;
     }
 
+    .page-hero-copy h2 {
+        overflow-wrap: anywhere;
+    }
+
     table {
         font-size: 0.87rem;
     }
@@ -1352,6 +1473,27 @@ button:hover {
 
     .stats-grid {
         grid-template-columns: 1fr;
+    }
+
+    .sales-table {
+        width: 100%;
+        font-size: 0.8rem;
+    }
+
+    .sales-table .actions-cell {
+        min-width: 92px;
+    }
+
+    .chart-wrap {
+        height: 220px;
+    }
+
+    .client-detail-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .client-detail-table-wrap {
+        max-width: 100%;
     }
 
     .magazyn-toolbar,

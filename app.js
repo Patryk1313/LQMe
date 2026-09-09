@@ -135,6 +135,29 @@ function populateSaleFlavorOptions() {
     }
 }
 
+function populateSaleCustomerOptions() {
+    const optionsList = document.getElementById("saleCustomerOptions");
+
+    if (!optionsList) {
+        return;
+    }
+
+    const customerNames = new Set(
+        getData().sales
+            .map((sale) => (sale.customerName || "").trim())
+            .filter(Boolean),
+    );
+
+    optionsList.innerHTML = "";
+    [...customerNames]
+        .sort((first, second) => first.localeCompare(second, "pl"))
+        .forEach((customerName) => {
+            const option = document.createElement("option");
+            option.value = customerName;
+            optionsList.appendChild(option);
+        });
+}
+
 function openSaleModal() {
     const modal = document.getElementById("saleModal");
     modal.classList.remove("hidden");
@@ -152,6 +175,7 @@ function bindSaleModal() {
         .getElementById("openSaleModalBtn")
         .addEventListener("click", () => {
             populateSaleFlavorOptions();
+            populateSaleCustomerOptions();
             document.getElementById("saleMessage").textContent = "";
             openSaleModal();
         });
@@ -178,6 +202,9 @@ function bindSaleForm() {
         const saleQuantity = Number(
             document.getElementById("saleQuantity").value,
         );
+        const customerName = document
+            .getElementById("saleCustomerName")
+            .value.trim();
         const aromaMlPerBottle = Number(
             document.getElementById("saleAromaMl").value,
         );
@@ -294,6 +321,7 @@ function bindSaleForm() {
             id: Date.now(),
             flavorId,
             flavorName: flavor.name,
+            customerName,
             nicotineType,
             strength,
             saleQuantity,
@@ -318,6 +346,7 @@ function bindSaleForm() {
             "Sprzedaż została dodana, a stany zostały zaktualizowane.";
         renderDashboard();
         populateSaleFlavorOptions();
+        populateSaleCustomerOptions();
         document.getElementById("saleQuantity").value = "1";
     });
 }
@@ -336,9 +365,10 @@ function renderFirebaseStatus() {
         "error",
         !isConnected && Boolean(syncStatus.lastError),
     );
+    statusEl.classList.toggle("firebase-status-hidden", isConnected || !syncStatus.lastError);
 
     if (isConnected) {
-        statusEl.textContent = "Połączono z bazą danych";
+        statusEl.textContent = "";
         return;
     }
 
@@ -347,7 +377,7 @@ function renderFirebaseStatus() {
         return;
     }
 
-    statusEl.textContent = "Sprawdzam połączenie z bazą...";
+    statusEl.textContent = "";
 }
 
 let currentFlavorSort = "custom";
@@ -376,6 +406,7 @@ function moveFlavorOrder(flavorId, direction) {
 
     renderDashboard();
     populateSaleFlavorOptions();
+    populateSaleCustomerOptions();
 }
 
 function bindTableSortControls() {
@@ -452,14 +483,13 @@ function renderDashboard() {
       <td><strong>${bottleCount}</strong> szt.</td>
       <td><span class="status-badge ${status.className}" title="${status.hint}">${status.label}</span></td>
       <td class="reorder-cell">
-        ${
-            isCustomSort
+        ${isCustomSort
                 ? `
           <button type="button" class="reorder-btn" data-move-up="${flavor.id}" ${flavor.originalIndex === 0 ? "disabled" : ""} title="Przesuń w górę">▲</button>
           <button type="button" class="reorder-btn" data-move-down="${flavor.id}" ${flavor.originalIndex === data.flavors.length - 1 ? "disabled" : ""} title="Przesuń w dół">▼</button>
         `
                 : '<span class="muted font-small">—</span>'
-        }
+            }
       </td>
     `;
 
@@ -501,12 +531,14 @@ bindSaleForm();
 bindTableSortControls();
 renderDashboard();
 renderFirebaseStatus();
+populateSaleCustomerOptions();
 initializeAppData();
 
 window.addEventListener("lqme:data-updated", () => {
     renderFirebaseStatus();
     renderDashboard();
     populateSaleFlavorOptions();
+    populateSaleCustomerOptions();
 });
 
 window.addEventListener("lqme:sync-status-updated", () => {
@@ -514,11 +546,11 @@ window.addEventListener("lqme:sync-status-updated", () => {
 });
 
 window.addEventListener("focus", () => {
-    hydrateDataFromRemote().catch(() => {});
+    hydrateDataFromRemote().catch(() => { });
 });
 
 document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
-        hydrateDataFromRemote().catch(() => {});
+        hydrateDataFromRemote().catch(() => { });
     }
 });

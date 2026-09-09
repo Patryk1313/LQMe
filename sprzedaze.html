@@ -19,6 +19,7 @@
                     <a href="index.html">Stan magazynowy</a>
                     <a href="magazyn.html">Magazyn</a>
                     <a class="active" href="sprzedaze.html">Sprzedaże</a>
+                    <a href="klienci.html">Klienci</a>
                     <a href="cennik.html">Cennik</a>
                     <a href="sklep.html">Sklep</a>
                     <a href="login.html" data-panel-auth-link="true"
@@ -29,9 +30,7 @@
                     id="firebaseStatus"
                     class="firebase-status"
                     aria-live="polite"
-                >
-                    Sprawdzam połączenie z bazą...
-                </div>
+                ></div>
                 <button
                     type="button"
                     class="theme-toggle-btn"
@@ -58,6 +57,33 @@
                     <div class="stats-grid" id="salesStats"></div>
                 </section>
 
+                <section class="panel chart-panel">
+                    <div class="section-head section-head-tight">
+                        <div>
+                            <p class="table-eyebrow">Trend</p>
+                            <h2>Sprzedaż w czasie</h2>
+                        </div>
+                        <label class="chart-range-control">
+                            <span class="muted">Zakres</span>
+                            <select
+                                id="salesChartRange"
+                                aria-label="Zakres wykresu sprzedaży"
+                            >
+                                <option value="7">7 dni</option>
+                                <option value="14" selected>14 dni</option>
+                                <option value="30">30 dni</option>
+                                <option value="90">90 dni</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="chart-wrap">
+                        <canvas
+                            id="salesTrendChart"
+                            aria-label="Wykres sprzedaży według dni"
+                        ></canvas>
+                    </div>
+                </section>
+
                 <section class="panel">
                     <div class="section-head section-head-tight">
                         <div>
@@ -66,20 +92,17 @@
                         </div>
                     </div>
                     <div class="table-wrap">
-                        <table>
+                        <table class="sales-table">
                             <thead>
                                 <tr>
                                     <th>Data</th>
+                                    <th>Klient</th>
                                     <th>Smak</th>
                                     <th>Rodzaj</th>
                                     <th>Moc</th>
                                     <th>Cena / szt.</th>
                                     <th>Wartość</th>
                                     <th>Sztuki</th>
-                                    <th>Aromat</th>
-                                    <th>Nikotyna / sol</th>
-                                    <th>Baza</th>
-                                    <th>Butelki</th>
                                     <th>Akcja</th>
                                 </tr>
                             </thead>
@@ -88,6 +111,44 @@
                     </div>
                 </section>
             </main>
+        </div>
+
+        <div id="editSaleModal" class="modal hidden" aria-hidden="true">
+            <div class="modal-backdrop" data-close-edit-sale="true"></div>
+            <div
+                class="modal-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="editSaleModalTitle"
+            >
+                <div class="modal-header">
+                    <h3 id="editSaleModalTitle">Edytuj sprzedaż</h3>
+                    <button
+                        type="button"
+                        class="modal-close"
+                        id="closeEditSaleBtn"
+                        aria-label="Zamknij"
+                    >
+                        X
+                    </button>
+                </div>
+                <p id="editSaleSummary" class="muted"></p>
+                <form id="editSaleForm" class="sale-form edit-sale-form">
+                    <div class="field-group">
+                        <label for="editSaleCustomerName">Klient</label>
+                        <input
+                            type="text"
+                            id="editSaleCustomerName"
+                            maxlength="80"
+                            placeholder="Imię lub nazwa klienta"
+                        />
+                    </div>
+                    <div class="actions-row sale-actions">
+                        <button type="submit">Zapisz zmiany</button>
+                        <span id="editSaleMessage" class="message"></span>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -107,6 +168,7 @@
         <script src="theme.js"></script>
         <script src="data.js"></script>
         <script src="auth.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
         <script src="sprzedaze.js"></script>
     </body>
 </html>

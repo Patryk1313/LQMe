@@ -93,8 +93,7 @@ function renderFlavorInventory() {
 
     flavorInventoryBody.innerHTML = "";
     data.flavors.forEach((flavor) => {
-        const isEditingQuantity = activeFlavorEditId === flavor.id;
-        const isEditingDetails = activeFlavorDetailsEditId === flavor.id;
+        const isEditing = activeFlavorEditId === flavor.id;
         const row = document.createElement("tr");
         row.innerHTML = `
       <td>
@@ -103,7 +102,7 @@ function renderFlavorInventory() {
           class="row-text-input"
           data-flavor-name="${flavor.id}"
           value="${flavor.name}"
-          ${isEditingDetails ? "" : "disabled"}
+          ${isEditing ? "" : "disabled"}
         />
       </td>
       <td>
@@ -112,7 +111,7 @@ function renderFlavorInventory() {
           class="row-text-input"
           data-flavor-description="${flavor.id}"
           value="${flavor.description}"
-          ${isEditingDetails ? "" : "disabled"}
+          ${isEditing ? "" : "disabled"}
         />
       </td>
       <td>
@@ -123,28 +122,20 @@ function renderFlavorInventory() {
           class="row-quantity-input"
           data-flavor-input="${flavor.id}"
           value="${Number(flavor.quantity)}"
-          ${isEditingQuantity ? "" : "disabled"}
+          ${isEditing ? "" : "disabled"}
         />
       </td>
       <td>${flavor.unit}</td>
       <td class="actions-cell">
-        <button type="button" class="table-button" data-flavor-quantity-id="${flavor.id}">${isEditingQuantity ? "Zapisz ilość" : "Edytuj ilość"}</button>
-        <button type="button" class="table-button table-button-secondary" data-flavor-details-id="${flavor.id}">${isEditingDetails ? "Zapisz dane" : "Edytuj nazwę i opis"}</button>
+        <button type="button" class="table-button" data-flavor-edit-id="${flavor.id}">${isEditing ? "Zapisz" : "Edytuj"}</button>
         <button type="button" class="table-button table-button-danger" data-flavor-delete-id="${flavor.id}">Usuń</button>
       </td>
     `;
 
-        row.querySelector("[data-flavor-quantity-id]").addEventListener(
+        row.querySelector("[data-flavor-edit-id]").addEventListener(
             "click",
             () => {
-                handleFlavorQuantityEdit(flavor.id);
-            },
-        );
-
-        row.querySelector("[data-flavor-details-id]").addEventListener(
-            "click",
-            () => {
-                handleFlavorDetailsEdit(flavor.id);
+                handleFlavorEdit(flavor.id);
             },
         );
 
@@ -184,6 +175,47 @@ function handleFlavorDelete(flavorId) {
     }
 
     showMagazynPopup(`Smak ${flavor.name} został usunięty.`);
+    renderFlavorInventory();
+}
+
+function handleFlavorEdit(flavorId) {
+    if (activeFlavorEditId !== flavorId) {
+        activeFlavorEditId = flavorId;
+        clearMagazynMessages();
+        renderFlavorInventory();
+        const input = document.querySelector(`[data-flavor-name="${flavorId}"]`);
+        input?.focus();
+        input?.select();
+        return;
+    }
+
+    const nameInput = document.querySelector(`[data-flavor-name="${flavorId}"]`);
+    const descriptionInput = document.querySelector(`[data-flavor-description="${flavorId}"]`);
+    const quantityInput = document.querySelector(`[data-flavor-input="${flavorId}"]`);
+    const newName = nameInput.value.trim();
+    const newDescription = descriptionInput.value.trim();
+    const newQuantity = Number(quantityInput.value);
+
+    if (!newName) {
+        showMagazynPopup("Błąd: nazwa smaku nie może być pusta.", true);
+        return;
+    }
+
+    if (!isValidFlavorQuantity(newQuantity)) {
+        showMagazynPopup("Błąd: ilość smaku musi być liczbą większą lub równą 0.", true);
+        return;
+    }
+
+    const data = getData();
+    const updatedFlavors = data.flavors.map((flavor) =>
+        flavor.id === flavorId
+            ? { ...flavor, name: newName, description: newDescription, quantity: newQuantity }
+            : flavor,
+    );
+
+    setData({ ...data, flavors: updatedFlavors });
+    activeFlavorEditId = null;
+    showMagazynPopup("Dane smaku zostały zapisane.");
     renderFlavorInventory();
 }
 
@@ -417,11 +449,11 @@ window.addEventListener("lqme:data-updated", () => {
 });
 
 window.addEventListener("focus", () => {
-    hydrateDataFromRemote().catch(() => {});
+    hydrateDataFromRemote().catch(() => { });
 });
 
 document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
-        hydrateDataFromRemote().catch(() => {});
+        hydrateDataFromRemote().catch(() => { });
     }
 });

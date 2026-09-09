@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Klienci - LQMe</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="page">
+            <header class="topbar">
+                <nav class="menu">
+                    <a href="index.html">Stan magazynowy</a>
+                    <a href="magazyn.html">Magazyn</a>
+                    <a href="sprzedaze.html">Sprzedaże</a>
+                    <a class="active" href="klienci.html">Klienci</a>
+                    <a href="cennik.html">Cennik</a>
+                    <a href="sklep.html">Sklep</a>
+                    <a href="login.html" data-panel-auth-link="true"
+                        >Logowanie</a
+                    >
+                </nav>
+                <div
+                    id="firebaseStatus"
+                    class="firebase-status"
+                    aria-live="polite"
+                ></div>
+                <button
+                    type="button"
+                    class="theme-toggle-btn"
+                    data-theme-toggle
+                    aria-label="Przełącz motyw"
+                >
+                    🌙 <span class="theme-btn-text">Ciemny motyw</span>
+                </button>
+            </header>
+
+            <main class="content">
+                <section class="page-hero panel">
+                    <div class="page-hero-copy">
+                        <p class="page-eyebrow">Relacje</p>
+                        <h2>Klienci</h2>
+                        <p class="muted">
+                            Podsumowanie zakupów zapisanych przy sprzedaży.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="section-head section-head-tight">
+                        <div>
+                            <p class="table-eyebrow">Baza klientów</p>
+                            <h2>Podsumowanie zakupów</h2>
+                        </div>
+                        <span id="clientsCount" class="muted"></span>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Klient</th>
+                                    <th>Liczba zamówień</th>
+                                    <th>Łącznie LQ</th>
+                                    <th>Wartość zakupów</th>
+                                    <th>Ostatni zakup</th>
+                                    <th>Akcja</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientsTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <div id="clientDetailsModal" class="modal hidden" aria-hidden="true">
+            <div class="modal-backdrop" data-close-client-details="true"></div>
+            <div
+                class="modal-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="clientDetailsTitle"
+            >
+                <div class="modal-header">
+                    <h3 id="clientDetailsTitle">Szczegóły klienta</h3>
+                    <button
+                        type="button"
+                        class="modal-close"
+                        id="closeClientDetailsBtn"
+                        aria-label="Zamknij"
+                    >
+                        X
+                    </button>
+                </div>
+                <div id="clientDetailsContent"></div>
+            </div>
+        </div>
+
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+        <script>
+            window.LQME_FIREBASE_CONFIG = {
+                apiKey: "AIzaSyD-noco-0LpF7FsI5jguvIAZvMFTDbEMBU",
+                authDomain: "lqme-cd75b.firebaseapp.com",
+                projectId: "lqme-cd75b",
+                storageBucket: "lqme-cd75b.firebasestorage.app",
+                messagingSenderId: "55923018511",
+                appId: "1:55923018511:web:1296d5f5d9bc05c213cc7a",
+            };
+        </script>
+        <script src="firebase-sync.js"></script>
+        <script src="theme.js"></script>
+        <script src="data.js"></script>
+        <script src="auth.js"></script>
+        <script src="klienci-admin.js"></script>
+    </body>
+</html>

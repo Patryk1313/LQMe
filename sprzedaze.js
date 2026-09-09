@@ -13,6 +13,131 @@ function formatSaleDate(value) {
     });
 }
 
+let salesTrendChart = null;
+let editingSaleId = null;
+let salesChartDays = 14;
+
+function closeEditSaleModal() {
+    const modal = document.getElementById("editSaleModal");
+    modal.classList.add("hidden");
+    modal.setAttribute("aria-hidden", "true");
+    editingSaleId = null;
+}
+
+function openEditSaleModal(sale) {
+    const modal = document.getElementById("editSaleModal");
+    const summary = document.getElementById("editSaleSummary");
+    const customerInput = document.getElementById("editSaleCustomerName");
+    const message = document.getElementById("editSaleMessage");
+
+    editingSaleId = sale.id;
+    summary.textContent = `${sale.flavorName || "Sprzedaż"} | ${sale.saleQuantity} szt. | ${formatSaleDate(sale.createdAt)}`;
+    customerInput.value = sale.customerName || "";
+    message.textContent = "";
+    modal.classList.remove("hidden");
+    modal.setAttribute("aria-hidden", "false");
+    customerInput.focus();
+}
+
+function bindEditSaleModal() {
+    const form = document.getElementById("editSaleForm");
+    const closeButton = document.getElementById("closeEditSaleBtn");
+    const backdrop = document.querySelector('[data-close-edit-sale="true"]');
+
+    closeButton.addEventListener("click", closeEditSaleModal);
+    backdrop.addEventListener("click", closeEditSaleModal);
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const message = document.getElementById("editSaleMessage");
+        const customerName = document.getElementById("editSaleCustomerName").value.trim();
+        const data = getData();
+        const saleExists = data.sales.some((sale) => sale.id === editingSaleId);
+
+        if (!saleExists) {
+            message.textContent = "Nie znaleziono tej sprzedaży.";
+            message.classList.add("message-error");
+            return;
+        }
+
+        const updatedSales = data.sales.map((sale) =>
+            sale.id === editingSaleId ? { ...sale, customerName } : sale,
+        );
+        setData({ ...data, sales: updatedSales });
+        message.textContent = "Dane klienta zostały zapisane.";
+        message.classList.remove("message-error");
+        message.classList.add("message-success");
+        renderSalesTable();
+        closeEditSaleModal();
+    });
+}
+
+function renderSalesTrendChart() {
+    const canvas = document.getElementById("salesTrendChart");
+    if (!canvas || typeof Chart === "undefined") {
+        return;
+    }
+
+    const data = getData();
+    const dailySales = new Map();
+    const today = new Date();
+
+    for (let dayOffset = salesChartDays - 1; dayOffset >= 0; dayOffset -= 1) {
+        const date = new Date(today);
+        date.setHours(0, 0, 0, 0);
+        date.setDate(today.getDate() - dayOffset);
+        dailySales.set(date.toISOString().slice(0, 10), 0);
+    }
+
+    data.sales.forEach((sale) => {
+        const saleDate = new Date(sale.createdAt);
+        if (Number.isNaN(saleDate.getTime())) {
+            return;
+        }
+
+        const dateKey = saleDate.toISOString().slice(0, 10);
+        if (dailySales.has(dateKey)) {
+            dailySales.set(
+                dateKey,
+                dailySales.get(dateKey) + Number(sale.saleQuantity || 0),
+            );
+        }
+    });
+
+    if (salesTrendChart) {
+        salesTrendChart.destroy();
+    }
+
+    salesTrendChart = new Chart(canvas, {
+        type: "line",
+        data: {
+            labels: [...dailySales.keys()].map((date) =>
+                new Date(`${date}T12:00:00`).toLocaleDateString("pl-PL", {
+                    day: "2-digit",
+                    month: "2-digit",
+                }),
+            ),
+            datasets: [{
+                label: "Sprzedane sztuki",
+                data: [...dailySales.values()],
+                borderColor: "#2f8f83",
+                backgroundColor: "rgba(47, 143, 131, 0.14)",
+                fill: true,
+                tension: 0.3,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { precision: 0 } },
+            },
+        },
+    });
+}
+
 function renderSalesStats() {
     const data = getData();
     const salesStats = document.getElementById("salesStats");
@@ -24,10 +149,28 @@ function renderSalesStats() {
         (sum, sale) => sum + Number(sale.totalPrice || 0),
         0,
     );
+    const rangeStart = new Date();
+    rangeStart.setHours(0, 0, 0, 0);
+    rangeStart.setDate(rangeStart.getDate() - salesChartDays + 1);
+    const rangeBottles = data.sales.reduce((sum, sale) => {
+        const saleDate = new Date(sale.createdAt);
+        return saleDate >= rangeStart
+            ? sum + Number(sale.saleQuantity || 0)
+            : sum;
+    }, 0);
     const totalProfit = data.sales.length * 5;
     const maxValue = Math.max(totalRevenue, totalBottles, totalProfit, 1);
 
     const stats = [
+        {
+            label: "Sprzedane LQ",
+            value: `${rangeBottles} szt.`,
+            subtitle: `Wybrany zakres: ${salesChartDays} dni`,
+            fillPercent: Math.max(
+                10,
+                Math.round((rangeBottles / Math.max(totalBottles, 1)) * 100),
+            ),
+        },
         {
             label: "Łączna wartość sprzedaży",
             value: `${Number(totalRevenue.toFixed(2))} zł`,
@@ -68,6 +211,21 @@ function renderSalesStats() {
       <div class="card-meter" aria-hidden="true"><span style="width: ${stat.fillPercent}%"></span></div>
     `;
         salesStats.appendChild(card);
+    });
+
+    renderSalesTrendChart();
+}
+
+function bindSalesChartRange() {
+    const rangeSelect = document.getElementById("salesChartRange");
+
+    if (!rangeSelect) {
+        return;
+    }
+
+    rangeSelect.addEventListener("change", (event) => {
+        salesChartDays = Number(event.target.value) || 14;
+        renderSalesStats();
     });
 }
 
@@ -154,7 +312,7 @@ function renderSalesTable() {
 
     if (data.sales.length === 0) {
         const row = document.createElement("tr");
-        row.innerHTML = '<td colspan="12">Brak zapisanych sprzedaży.</td>';
+        row.innerHTML = '<td colspan="9">Brak zapisanych sprzedaży.</td>';
         salesTableBody.appendChild(row);
         return;
     }
@@ -165,18 +323,22 @@ function renderSalesTable() {
         const row = document.createElement("tr");
         row.innerHTML = `
       <td>${formatSaleDate(sale.createdAt)}</td>
+            <td>${sale.customerName || "Brak danych"}</td>
       <td>${sale.flavorName}</td>
       <td>${typeLabel}</td>
       <td>${sale.strength} mg</td>
       <td>${Number(sale.unitPrice || 0)} zł</td>
       <td>${Number(sale.totalPrice || 0)} zł</td>
       <td>${sale.saleQuantity}</td>
-      <td>${sale.flavorUsed} ml</td>
-      <td>${sale.nicotineUsed} ml</td>
-      <td>${sale.baseUsed} ml</td>
-      <td>${sale.bottlesUsed}</td>
-      <td><button type="button" class="table-button table-button-danger" data-delete-sale="${sale.id}">Usuń</button></td>
+            <td class="actions-cell">
+                <button type="button" class="table-button table-button-secondary" data-edit-sale="${sale.id}">Edytuj</button>
+                <button type="button" class="table-button table-button-danger" data-delete-sale="${sale.id}">Usuń</button>
+            </td>
     `;
+
+        row.querySelector("[data-edit-sale]").addEventListener("click", () => {
+            openEditSaleModal(sale);
+        });
 
         row.querySelector("[data-delete-sale]").addEventListener(
             "click",
@@ -208,6 +370,8 @@ async function initializeSalesData() {
 
 renderSalesStats();
 renderSalesTable();
+bindSalesChartRange();
+bindEditSaleModal();
 initializeSalesData();
 
 window.addEventListener("lqme:data-updated", () => {
@@ -216,11 +380,11 @@ window.addEventListener("lqme:data-updated", () => {
 });
 
 window.addEventListener("focus", () => {
-    hydrateDataFromRemote().catch(() => {});
+    hydrateDataFromRemote().catch(() => { });
 });
 
 document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
-        hydrateDataFromRemote().catch(() => {});
+        hydrateDataFromRemote().catch(() => { });
     }
 });

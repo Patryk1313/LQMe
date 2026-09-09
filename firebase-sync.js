@@ -51,17 +51,20 @@
 
         if (currentState.isReady) {
             statusEl.classList.add("connected");
-            statusEl.textContent = "Połączono z bazą danych";
+            statusEl.classList.add("firebase-status-hidden");
+            statusEl.textContent = "";
             return;
         }
 
         if (currentState.lastError) {
             statusEl.classList.add("error");
+            statusEl.classList.remove("firebase-status-hidden");
             statusEl.textContent = `Firebase: ${currentState.lastError}`;
             return;
         }
 
-        statusEl.textContent = "Sprawdzam połączenie z bazą...";
+        statusEl.classList.add("firebase-status-hidden");
+        statusEl.textContent = "";
     }
 
     function setSyncState(patch) {
@@ -154,7 +157,7 @@
         // Dodatkowy polling zabezpiecza synchronizację na telefonach,
         // gdzie połączenie snapshot bywa usypiane przez przeglądarkę.
         refreshIntervalId = setInterval(() => {
-            refreshRemoteData().catch(() => {});
+            refreshRemoteData().catch(() => { });
         }, 12000);
     }
 
@@ -174,7 +177,7 @@
 
         retryTimeoutId = setTimeout(() => {
             retryTimeoutId = null;
-            flushPendingWrite().catch(() => {});
+            flushPendingWrite().catch(() => { });
         }, 2500);
     }
 
@@ -220,7 +223,7 @@
 
             if (pendingWritePayload) {
                 setTimeout(() => {
-                    flushPendingWrite().catch(() => {});
+                    flushPendingWrite().catch(() => { });
                 }, 0);
             }
 
@@ -292,7 +295,7 @@
                             });
 
                             if (pendingWritePayload) {
-                                flushPendingWrite().catch(() => {});
+                                flushPendingWrite().catch(() => { });
                             }
                         }
                     });
@@ -419,16 +422,16 @@
     });
 
     window.addEventListener("DOMContentLoaded", () => {
-        initializeFirebase().catch(() => {});
+        initializeFirebase().catch(() => { });
     });
 
     window.addEventListener("online", () => {
-        refreshRemoteData().catch(() => {});
+        refreshRemoteData().catch(() => { });
     });
 
     document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
-            refreshRemoteData().catch(() => {});
+            refreshRemoteData().catch(() => { });
         }
     });
 })();
