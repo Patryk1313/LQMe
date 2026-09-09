@@ -280,6 +280,160 @@ function closeClientOrderModal() {
     activeOrderFlavorId = null;
 }
 
+function closeClientCartModal() {
+    const modal = document.getElementById("clientCartModal");
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.add("hidden");
+    modal.setAttribute("aria-hidden", "true");
+}
+
+function renderClientCartModal() {
+    const content = document.getElementById("clientCartModalContent");
+
+    if (!content) {
+        return;
+    }
+
+    if (clientCart.length === 0) {
+        content.innerHTML = '<p class="storefront-cart-modal-empty">Koszyk jest pusty.</p>';
+        return;
+    }
+
+    const data = getData();
+    const result = getCartRequirements(clientCart, data);
+    const shortageMessage = result.shortages.length
+        ? `<p class="cart-status cart-error">${result.shortages[0]}</p>`
+        : '<p class="cart-status cart-ok">Zamówienie można przygotować.</p>';
+
+    content.innerHTML = `
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Smak</th><th>Wariant</th><th>Ilość</th><th>Akcja</th></tr>
+                </thead>
+                <tbody>
+                    ${clientCart.map((item) => `
+                        <tr>
+                            <td>${item.flavorName}</td>
+                            <td>${item.nicotineType === "salt" ? "Sól" : "Nikotyna"} / ${item.strength} mg</td>
+                            <td>
+                                <input
+                                    class="cart-quantity-input"
+                                    type="number"
+                                    min="1"
+                                    step="1"
+                                    value="${item.quantity}"
+                                    data-edit-cart-quantity="true"
+                                    data-flavor-id="${item.flavorId}"
+                                    data-strength="${item.strength}"
+                                    data-nicotine-type="${item.nicotineType}"
+                                    aria-label="Ilość ${item.flavorName}"
+                                />
+                            </td>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="table-button table-button-danger"
+                                    data-remove-cart-modal="true"
+                                    data-flavor-id="${item.flavorId}"
+                                    data-strength="${item.strength}"
+                                    data-nicotine-type="${item.nicotineType}"
+                                >Usuń</button>
+                            </td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        </div>
+        ${shortageMessage}
+    `;
+
+    content.querySelectorAll("[data-edit-cart-quantity]").forEach((input) => {
+        input.addEventListener("change", () => {
+            updateCartItemQuantity(
+                input.dataset.flavorId,
+                Number(input.dataset.strength),
+                input.dataset.nicotineType,
+                Number(input.value),
+            );
+        });
+    });
+
+    content.querySelectorAll("[data-remove-cart-modal]").forEach((button) => {
+        button.addEventListener("click", () => {
+            removeFromCart(
+                Number(button.dataset.flavorId),
+                Number(button.dataset.strength),
+                button.dataset.nicotineType,
+            );
+        });
+    });
+}
+
+function updateCartItemQuantity(flavorId, strength, nicotineType, quantity) {
+    if (!Number.isInteger(quantity) || quantity <= 0) {
+        renderClientCartModal();
+        showClientPopup("Ilość musi być większa od zera.");
+        return;
+    }
+
+    const nextCart = clientCart.map((item) =>
+        Number(item.flavorId) === Number(flavorId) &&
+            Number(item.strength) === Number(strength) &&
+            item.nicotineType === nicotineType
+            ? { ...item, quantity }
+            : { ...item },
+    );
+    const result = getCartRequirements(nextCart, getData());
+
+    if (!result.canFulfill) {
+        renderClientCartModal();
+        showClientPopup(`Nie można ustawić tej ilości: ${result.shortages[0]}`);
+        return;
+    }
+
+    clientCart = nextCart;
+    renderClientFlavors();
+    renderCart();
+}
+
+function openClientCartModal(afterAdd = false) {
+    const modal = document.getElementById("clientCartModal");
+    const title = document.getElementById("clientCartModalTitle");
+
+    if (!modal || !title) {
+        return;
+    }
+
+    title.textContent = afterAdd ? "Dodano do koszyka" : "Twoje zamówienie";
+    renderClientCartModal();
+    modal.classList.remove("hidden");
+    modal.setAttribute("aria-hidden", "false");
+}
+
+function bindClientCartModal() {
+    const openButton = document.getElementById("openCartModalBtn");
+    const closeButton = document.getElementById("closeClientCartBtn");
+    const continueButton = document.getElementById("continueShoppingBtn");
+    const backdrop = document.querySelector('[data-close-client-cart="true"]');
+
+    if (!openButton || !closeButton || !continueButton || !backdrop) {
+        return;
+    }
+
+    openButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        openClientCartModal();
+    });
+    closeButton.addEventListener("click", closeClientCartModal);
+    continueButton.addEventListener("click", closeClientCartModal);
+    backdrop.addEventListener("click", closeClientCartModal);
+}
+
 function addToCart(flavorId, nicotineType, strength, quantity) {
     const data = getData();
     const flavor = data.flavors.find((item) => item.id === flavorId);
@@ -310,7 +464,7 @@ function addToCart(flavorId, nicotineType, strength, quantity) {
     clientCart = nextCart;
     renderClientFlavors();
     renderCart();
-    showClientPopup("Produkt dodany do zamówienia.");
+    openClientCartModal(true);
     return true;
 }
 
@@ -747,6 +901,12 @@ function bindStorefrontInventorySync() {
 function renderCart() {
     const cartTableBody = document.getElementById("cartTableBody");
 
+    if (!cartTableBody) {
+        renderClientCartModal();
+        updateCopyOrderButtonState();
+        return;
+    }
+
     cartTableBody.innerHTML = "";
 
     if (clientCart.length === 0) {
@@ -755,6 +915,7 @@ function renderCart() {
         cartTableBody.appendChild(row);
         renderCartSummary();
         updateCopyOrderButtonState();
+        renderClientCartModal();
         return;
     }
 
@@ -781,6 +942,7 @@ function renderCart() {
 
     renderCartSummary();
     updateCopyOrderButtonState();
+    renderClientCartModal();
 }
 
 function bindFlavorSearch() {
@@ -797,6 +959,7 @@ function bindFlavorSearch() {
 renderClientFlavors();
 renderCart();
 bindClientOrderModal();
+bindClientCartModal();
 bindStorefrontInventorySync();
 bindCopyOrderButton();
 bindClientCopyModal();

@@ -14,39 +14,48 @@
     </head>
     <body class="client-view">
         <div class="client-page">
-            <!-- <header class="client-header">
+            <div class="storefront-topline">
                 <div class="client-header-content">
                     <div class="client-brand">
                         <p class="client-kicker">Sklep LQMe</p>
-                        <h1>Wybierz Swój Liquid</h1>
+                        <h1>Wybierz swój liquid</h1>
                         <p class="muted">
-                            Sprawdź dostępne smaki i od razu zobacz, co da się
-                            przygotować (liczone po 5 ml aromatu na 1 szt.).
+                            Wybierz smak, moc i liczbę butelek. Dostępność jest
+                            sprawdzana na bieżąco.
                         </p>
                     </div>
                 </div>
-                <div
-                    id="firebaseStatus"
-                    class="firebase-status firebase-status-client"
-                    aria-live="polite"
-                >
-                </div> -->
-                <button
-                    type="button"
-                    class="theme-toggle-btn storefront-theme-btn"
-                    data-theme-toggle
-                    aria-label="Przełącz motyw"
-                >
-                    🌙 <span class="theme-btn-text">Ciemny motyw</span>
-                </button>
-            </header>
+                <div class="storefront-tools">
+                    <a
+                        class="storefront-cart-link"
+                        href="#orderSummary"
+                        id="openCartModalBtn"
+                    >
+                        <span aria-hidden="true">🛒</span>
+                        <span>Koszyk</span>
+                    </a>
+                    <button
+                        type="button"
+                        class="theme-toggle-btn storefront-theme-btn"
+                        data-theme-toggle
+                        aria-label="Przełącz motyw"
+                    >
+                        <span aria-hidden="true">◐</span>
+                        <span class="theme-btn-text">Motyw</span>
+                    </button>
+                </div>
+            </div>
 
             <main class="client-content">
-                <section class="panel client-products-panel">
+                <section class="storefront-section client-products-panel">
                     <div class="section-head section-head-search">
                         <div>
-                            <p class="table-eyebrow">Oferta</p>
-                            <h2>Dostępne smaki</h2>
+                            <p class="storefront-section-label">Oferta</p>
+                            <h2>Znajdź swój smak</h2>
+                            <p class="muted storefront-section-note">
+                                Dostępne warianty przygotujemy według wybranej
+                                mocy.
+                            </p>
                         </div>
                         <div class="storefront-search-wrap">
                             <input
@@ -60,37 +69,6 @@
                     </div>
                     <div id="clientFlavorList" class="flavor-grid"></div>
                 </section>
-
-                <section class="panel">
-                    <h2>Zamówienie</h2>
-                    <p class="muted">
-                        Zamówienie pokazuje, czy zestaw dla wybranych smaków i
-                        mocy może zostać przygotowane.
-                    </p>
-
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Smak</th>
-                                    <th>Rodzaj</th>
-                                    <th>Moc</th>
-                                    <th>Ilość</th>
-                                    <th>Akcja</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cartTableBody"></tbody>
-                        </table>
-                    </div>
-
-                    <div id="cartSummary" class="cart-summary"></div>
-
-                    <div class="actions-row order-actions">
-                        <button type="button" id="copyOrderBtn">
-                            Kopiuj do schowka
-                        </button>
-                    </div>
-                </section>
             </main>
         </div>
 
@@ -100,6 +78,47 @@
             role="status"
             aria-live="polite"
         ></div>
+
+        <div id="clientCartModal" class="modal hidden" aria-hidden="true">
+            <div class="modal-backdrop" data-close-client-cart="true"></div>
+            <div
+                class="modal-dialog storefront-cart-modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="clientCartModalTitle"
+            >
+                <div class="modal-header">
+                    <div>
+                        <p class="storefront-section-label">Koszyk</p>
+                        <h3 id="clientCartModalTitle">Twoje zamówienie</h3>
+                    </div>
+                    <button
+                        type="button"
+                        class="modal-close"
+                        id="closeClientCartBtn"
+                        aria-label="Zamknij"
+                    >
+                        X
+                    </button>
+                </div>
+                <div
+                    id="clientCartModalContent"
+                    class="storefront-cart-modal-content"
+                ></div>
+                <div class="storefront-cart-modal-actions">
+                    <button
+                        type="button"
+                        class="table-button table-button-secondary"
+                        id="continueShoppingBtn"
+                    >
+                        Kontynuuj zakupy
+                    </button>
+                    <button type="button" id="copyOrderBtn">
+                        Kopiuj zamówienie
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <div id="clientOrderModal" class="modal hidden" aria-hidden="true">
             <div class="modal-backdrop" data-close-client-order="true"></div>
