@@ -62,7 +62,13 @@ function bindEditSaleModal() {
         const updatedSales = data.sales.map((sale) =>
             sale.id === editingSaleId ? { ...sale, customerName } : sale,
         );
-        setData({ ...data, sales: updatedSales });
+        setData(
+            upsertClient(
+                { ...data, sales: updatedSales },
+                customerName,
+                new Date().toISOString(),
+            ),
+        );
         message.textContent = "Dane klienta zostały zapisane.";
         message.classList.remove("message-error");
         message.classList.add("message-success");

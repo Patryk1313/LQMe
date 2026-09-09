@@ -34,6 +34,7 @@ const DEFAULT_DATA = {
         },
     ],
     sales: [],
+    clients: [],
     meta: {
         inventoryPresetVersion: INVENTORY_PRESET_VERSION,
         flavorPresetVersion: FLAVOR_PRESET_VERSION,
@@ -87,11 +88,38 @@ function normalizeData(data) {
             ? data.flavors
             : createDefaultData().flavors,
         sales: Array.isArray(data.sales) ? data.sales : [],
+        clients: Array.isArray(data.clients) ? data.clients : [],
         meta:
             data && typeof data.meta === "object" && data.meta !== null
                 ? data.meta
                 : {},
     };
+
+    const clientsByKey = new Map(
+        normalized.clients
+            .filter((client) => client && client.name)
+            .map((client) => [client.key || client.name.toLocaleLowerCase("pl-PL"), client]),
+    );
+
+    normalized.sales.forEach((sale) => {
+        const name = (sale.customerName || "").trim();
+        if (!name) {
+            return;
+        }
+
+        const key = name.toLocaleLowerCase("pl-PL");
+        if (!clientsByKey.has(key)) {
+            clientsByKey.set(key, {
+                id: `client-${key.replace(/[^a-z0-9]+/gi, "-")}`,
+                key,
+                name,
+                createdAt: sale.createdAt || new Date().toISOString(),
+                updatedAt: sale.createdAt || new Date().toISOString(),
+            });
+        }
+    });
+
+    normalized.clients = [...clientsByKey.values()];
 
     if (normalized.meta.inventoryPresetVersion !== INVENTORY_PRESET_VERSION) {
         normalized.inventory = applyInventoryPreset(normalized.inventory);
@@ -107,6 +135,7 @@ function normalizeData(data) {
         inventory: normalized.inventory,
         flavors: normalized.flavors,
         sales: normalized.sales,
+        clients: normalized.clients,
         meta: normalized.meta,
     };
 }
@@ -152,6 +181,34 @@ function setData(data) {
     }
 
     return normalized;
+}
+
+function upsertClient(data, name, timestamp = new Date().toISOString()) {
+    const clientName = (name || "").trim();
+    if (!clientName) {
+        return normalizeData(data);
+    }
+
+    const key = clientName.toLocaleLowerCase("pl-PL");
+    const existingClient = data.clients.find((client) => client.key === key);
+    const clients = existingClient
+        ? data.clients.map((client) =>
+              client.key === key
+                  ? { ...client, name: clientName, updatedAt: timestamp }
+                  : client,
+          )
+        : [
+              ...data.clients,
+              {
+                  id: `client-${Date.now()}`,
+                  key,
+                  name: clientName,
+                  createdAt: timestamp,
+                  updatedAt: timestamp,
+              },
+          ];
+
+    return normalizeData({ ...data, clients });
 }
 
 async function loadDataWithRemoteFallback() {

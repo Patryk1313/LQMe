@@ -36,11 +36,11 @@
         });
     }
 
-    function showReleaseNotes() {
+    function showReleaseNotes(userId = "guest") {
         const isAdminPage =
             document.querySelector(".page") &&
             !document.body.classList.contains("client-view");
-        const releaseNotesKey = "lqme_release_notes_2026_09_09";
+        const releaseNotesKey = `lqme_release_notes_2026_09_09_${userId}`;
 
         if (!isAdminPage || localStorage.getItem(releaseNotesKey) === "closed") {
             return;
@@ -83,6 +83,39 @@
         document.body.appendChild(modal);
     }
 
+    function bindMobileAdminMenu() {
+        const page = document.querySelector(".page");
+        const topbar = page?.querySelector(".topbar");
+        const menu = topbar?.querySelector(".menu");
+
+        if (!topbar || !menu || document.body.classList.contains("client-view")) {
+            return;
+        }
+
+        const toggle = document.createElement("button");
+        toggle.type = "button";
+        toggle.className = "mobile-menu-toggle";
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-controls", "panelMenu");
+        toggle.innerHTML = '<span aria-hidden="true">☰</span><span>Menu</span>';
+        menu.id = "panelMenu";
+        topbar.insertBefore(toggle, menu);
+
+        const closeMenu = () => {
+            topbar.classList.remove("mobile-menu-open");
+            toggle.setAttribute("aria-expanded", "false");
+        };
+
+        toggle.addEventListener("click", () => {
+            const isOpen = topbar.classList.toggle("mobile-menu-open");
+            toggle.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        menu.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", closeMenu);
+        });
+    }
+
     // Aplikuj zapisany motyw natychmiast, aby zapobiec miganiu
     applyTheme(getSavedTheme());
 
@@ -91,7 +124,19 @@
         document.querySelectorAll("[data-theme-toggle]").forEach((btn) => {
             btn.addEventListener("click", toggleTheme);
         });
-        showReleaseNotes();
+        bindMobileAdminMenu();
+        const firebaseAuth =
+            window.firebase && typeof window.firebase.auth === "function"
+                ? window.firebase.auth()
+                : null;
+
+        if (firebaseAuth && typeof firebaseAuth.onAuthStateChanged === "function") {
+            firebaseAuth.onAuthStateChanged((user) => {
+                showReleaseNotes(user?.uid || "guest");
+            });
+        } else {
+            showReleaseNotes();
+        }
     });
 
     window.toggleLqmeTheme = toggleTheme;

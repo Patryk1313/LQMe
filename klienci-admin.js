@@ -12,6 +12,17 @@ function formatClientDate(value) {
 function getClientSummaries() {
     const summaries = new Map();
 
+    getData().clients.forEach((client) => {
+        summaries.set(client.key, {
+            name: client.name,
+            orders: 0,
+            bottles: 0,
+            revenue: 0,
+            lastSale: null,
+            sales: [],
+        });
+    });
+
     getData().sales.forEach((sale) => {
         const name = (sale.customerName || "Brak danych").trim() || "Brak danych";
         const key = name.toLocaleLowerCase("pl-PL");

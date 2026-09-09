@@ -336,10 +336,12 @@ function bindSaleForm() {
         };
 
         setData({
-            ...data,
-            inventory: updatedInventory,
-            flavors: updatedFlavors,
-            sales: [saleEntry, ...data.sales],
+            ...upsertClient({
+                ...data,
+                inventory: updatedInventory,
+                flavors: updatedFlavors,
+                sales: [saleEntry, ...data.sales],
+            }, customerName, saleEntry.createdAt),
         });
 
         message.textContent =

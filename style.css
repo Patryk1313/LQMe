@@ -670,6 +670,10 @@ h2 {
     background: var(--accent-soft);
 }
 
+.mobile-menu-toggle {
+    display: none;
+}
+
 .firebase-status {
     margin-top: auto;
     margin-bottom: 0;
@@ -732,6 +736,50 @@ h2 {
     min-width: 0;
     width: 100%;
     padding: 28px 32px 48px;
+}
+
+.admin-list-hero {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 8px 0 22px;
+    border-bottom: 1px solid var(--line);
+}
+
+.admin-list-hero h2 {
+    margin: 5px 0 8px;
+    font-size: clamp(1.8rem, 3vw, 2.45rem);
+    letter-spacing: -0.04em;
+}
+
+.admin-list-kicker {
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.admin-list-panel {
+    padding: 22px;
+}
+
+.admin-list-panel table {
+    min-width: 760px;
+}
+
+.admin-list-panel tbody tr:hover {
+    background: rgba(107, 78, 255, 0.06);
+}
+
+.admin-list-panel td:first-child {
+    font-weight: 700;
+}
+
+.admin-list-panel td:nth-child(3),
+.admin-list-panel td:nth-child(4) {
+    font-weight: 700;
 }
 
 .page-hero {
@@ -1698,8 +1746,35 @@ button:hover {
         padding: 18px 0;
     }
 
-    .menu {
+    .page .mobile-menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: calc(100% - 28px);
+        margin: 0 14px;
+        padding: 10px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: var(--radius-sm);
+        background: rgba(255, 255, 255, 0.07);
+        color: #ffffff;
+        font-size: 0.86rem;
+        font-weight: 700;
+    }
+
+    .page .mobile-menu-toggle span:first-child {
+        font-size: 1.1rem;
+        line-height: 1;
+    }
+
+    .page .menu {
+        display: none;
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 2px;
+    }
+
+    .page .topbar.mobile-menu-open .menu {
+        display: grid;
     }
 
     .menu a {
@@ -1824,7 +1899,7 @@ button:hover {
         padding: 18px 14px 32px;
     }
 
-    .menu {
+    .page .topbar.mobile-menu-open .menu {
         grid-template-columns: 1fr;
     }
 
