@@ -674,6 +674,120 @@ h2 {
     display: none;
 }
 
+.sidebar-collapse-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    width: calc(100% - 36px);
+    min-height: 36px;
+    margin: 0 18px;
+    padding: 7px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.sidebar-collapse-toggle span:first-child {
+    font-size: 1.35rem;
+    line-height: 0.7;
+}
+
+.sidebar-collapse-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: none;
+}
+
+.admin-menu-collapsed {
+    grid-template-columns: 72px minmax(0, 1fr);
+}
+
+.admin-menu-collapsed .topbar {
+    align-items: center;
+}
+
+.admin-menu-collapsed .menu {
+    width: 100%;
+}
+
+.admin-menu-collapsed .menu a {
+    position: relative;
+    width: 48px;
+    height: 44px;
+    margin: 0 auto;
+    padding: 0;
+    font-size: 0;
+    text-align: center;
+}
+
+.menu-icon {
+    display: none;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    object-fit: contain;
+    opacity: 0.72;
+}
+
+.menu a.active .menu-icon,
+.menu a:hover .menu-icon {
+    opacity: 1;
+}
+
+.admin-menu-collapsed .menu a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-menu-collapsed .menu-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+    flex-basis: 20px;
+}
+
+.admin-menu-collapsed .firebase-status,
+.admin-menu-collapsed .theme-toggle-btn {
+    width: 44px;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 10px 4px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.admin-menu-collapsed .theme-toggle-btn {
+    font-size: 0;
+}
+
+.admin-menu-collapsed .theme-toggle-btn::before {
+    content: "";
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url("https://img.icons8.com/ios-glyphs/24/FFFFFF/moon-symbol.png") center / contain no-repeat;
+}
+
+html.dark-theme .admin-menu-collapsed .theme-toggle-btn::before {
+    background-image: url("https://img.icons8.com/ios-glyphs/24/FFFFFF/sun.png");
+}
+
+.admin-menu-collapsed .sidebar-collapse-toggle {
+    width: 44px;
+    margin-left: 0;
+    margin-right: 0;
+    justify-content: center;
+    padding: 7px;
+}
+
+.admin-menu-collapsed .sidebar-collapse-label {
+    display: none;
+}
+
 .firebase-status {
     margin-top: auto;
     margin-bottom: 0;
@@ -1760,6 +1874,34 @@ button:hover {
         color: #ffffff;
         font-size: 0.86rem;
         font-weight: 700;
+    }
+
+    .page .sidebar-collapse-toggle {
+        display: none;
+    }
+
+    .admin-menu-collapsed {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-menu-collapsed .topbar {
+        align-items: stretch;
+    }
+
+    .admin-menu-collapsed .menu a {
+        width: auto;
+        height: auto;
+        margin: 0;
+        padding: 12px 20px;
+        font-size: 0.92rem;
+    }
+
+    .admin-menu-collapsed .firebase-status,
+    .admin-menu-collapsed .theme-toggle-btn {
+        width: calc(100% - 36px);
+        margin-left: 18px;
+        margin-right: 18px;
+        padding: 10px 12px;
     }
 
     .page .mobile-menu-toggle span:first-child {

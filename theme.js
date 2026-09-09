@@ -92,6 +92,31 @@
             return;
         }
 
+        const menuIcons = {
+            "index.html": "dashboard",
+            "magazyn.html": "warehouse",
+            "sprzedaze.html": "combo-chart",
+            "klienci.html": "conference-call",
+            "cennik.html": "price-tag",
+            "sklep.html": "shop",
+            "login.html": "logout-rounded-left",
+        };
+
+        menu.querySelectorAll("a").forEach((link) => {
+            const iconName = menuIcons[link.getAttribute("href")];
+            if (!iconName || link.querySelector(".menu-icon")) {
+                return;
+            }
+
+            const icon = document.createElement("img");
+            icon.className = "menu-icon";
+            icon.src = `https://img.icons8.com/ios-glyphs/24/FFFFFF/${iconName}.png`;
+            icon.alt = "";
+            icon.setAttribute("aria-hidden", "true");
+            link.insertBefore(icon, link.firstChild);
+            link.title = link.textContent.trim();
+        });
+
         const toggle = document.createElement("button");
         toggle.type = "button";
         toggle.className = "mobile-menu-toggle";
@@ -113,6 +138,30 @@
 
         menu.querySelectorAll("a").forEach((link) => {
             link.addEventListener("click", closeMenu);
+        });
+
+        const collapseButton = document.createElement("button");
+        collapseButton.type = "button";
+        collapseButton.className = "sidebar-collapse-toggle";
+        collapseButton.setAttribute("aria-label", "Zwiń menu");
+        collapseButton.innerHTML = '<span aria-hidden="true">‹</span><span class="sidebar-collapse-label">Zwiń menu</span>';
+        topbar.insertBefore(collapseButton, menu);
+
+        const collapsedKey = "lqme_admin_sidebar_collapsed";
+        const applyCollapsedState = (collapsed) => {
+            page.classList.toggle("admin-menu-collapsed", collapsed);
+            collapseButton.setAttribute(
+                "aria-label",
+                collapsed ? "Rozwiń menu" : "Zwiń menu",
+            );
+            collapseButton.querySelector("span").textContent = collapsed ? "›" : "‹";
+        };
+
+        applyCollapsedState(localStorage.getItem(collapsedKey) === "true");
+        collapseButton.addEventListener("click", () => {
+            const collapsed = !page.classList.contains("admin-menu-collapsed");
+            localStorage.setItem(collapsedKey, String(collapsed));
+            applyCollapsedState(collapsed);
         });
     }
 

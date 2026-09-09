@@ -109,7 +109,15 @@
         const isAuthenticated = hasAuthenticatedUser(auth?.currentUser);
 
         links.forEach((link) => {
-            link.textContent = isAuthenticated ? "Wyloguj" : "Logowanie";
+            let label = link.querySelector(".menu-link-label");
+            if (!label) {
+                label = document.createElement("span");
+                label.className = "menu-link-label";
+                link.appendChild(label);
+            }
+            const authLabel = isAuthenticated ? "Wyloguj" : "Logowanie";
+            label.textContent = authLabel;
+            link.title = authLabel;
             link.href = isAuthenticated ? "login.html?logout=1" : "login.html";
             link.onclick = (event) => {
                 if (!isAuthenticated) {
